@@ -1,4 +1,3 @@
-import React from 'react';
 import { notFound } from 'next/navigation';
 import ArticleCard from '@/components/blog/ArticleCard';
 import { categories, getArticlesByCategory } from '@/lib/data';
@@ -10,19 +9,20 @@ export async function generateStaticParams() {
 }
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = categories.find(cat => cat.slug === params.slug);
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
+  const category = categories.find(cat => cat.slug === slug);
   
   if (!category) {
     notFound();
   }
 
-  const articles = getArticlesByCategory(params.slug);
+  const articles = getArticlesByCategory(slug);
 
   return (
     <div>

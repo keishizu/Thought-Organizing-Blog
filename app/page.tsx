@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { Brain, Compass, Eye } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';

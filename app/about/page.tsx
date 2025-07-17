@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { User, Heart, BookOpen, Coffee } from 'lucide-react';
 
 export default function AboutPage() {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Tag } from 'lucide-react';
@@ -13,13 +12,14 @@ export async function generateStaticParams() {
 }
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function PostPage({ params }: PostPageProps) {
-  const article = getArticleById(params.slug);
+export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = await params;
+  const article = getArticleById(slug);
   
   if (!article) {
     notFound();
