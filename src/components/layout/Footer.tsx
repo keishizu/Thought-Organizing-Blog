@@ -18,8 +18,8 @@ export default function Footer() {
       { name: 'プライバシーポリシー', href: '/privacy' },
     ],
     social: [
-      { name: 'Twitter', href: '#', icon: Twitter },
-      { name: 'GitHub', href: '#', icon: Github },
+      // { name: 'Twitter', href: '#', icon: Twitter },
+      // { name: 'GitHub', href: '#', icon: Github },
       { name: 'Email', href: '/contact', icon: Mail },
     ],
   };

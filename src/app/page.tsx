@@ -8,7 +8,7 @@ import { getRecentArticles, getRecommendedArticles } from '@/lib/data';
 
 export default function Home() {
   const recentArticles = getRecentArticles(3);
-  const recommendedArticles = getRecommendedArticles(4);
+  const recommendedArticles = getRecommendedArticles(3);
 
   const categories = [
     {
@@ -76,7 +76,7 @@ export default function Home() {
       <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%)'}}>
         <div className="container-custom">
           <h2 className="section-title">おすすめの記事</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {recommendedArticles.map((article) => (
               <ArticleCard
                 key={article.id}
@@ -93,7 +93,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center">
-            <Link href="/categories/thinking-action" className="btn-ghost">
+            <Link href="/articles" className="btn-secondary">
               すべての記事を見る
             </Link>
           </div>
@@ -121,7 +121,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center">
-            <Link href="/categories/insights-daily" className="btn-secondary">
+            <Link href="/articles" className="btn-secondary">
               新着記事をもっと見る
             </Link>
           </div>

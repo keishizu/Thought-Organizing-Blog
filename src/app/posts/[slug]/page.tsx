@@ -31,7 +31,7 @@ export default async function PostPage({ params }: PostPageProps) {
     <div>
       {/* 戻るボタン */}
       <div className="container-custom py-4">
-        <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+        <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
           <ArrowLeft size={20} className="mr-2" />
           記事一覧に戻る
         </Link>
