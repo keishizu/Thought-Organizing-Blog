@@ -2,6 +2,7 @@
 
 import Header from './Header';
 import Footer from './Footer';
+import { Toaster } from '@/components/ui/toaster';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 }

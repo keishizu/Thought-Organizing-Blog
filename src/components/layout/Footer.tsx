@@ -16,6 +16,7 @@ export default function Footer() {
       { name: 'About', href: '/about' },
       { name: 'お問い合わせ', href: '/contact' },
       { name: 'プライバシーポリシー', href: '/privacy' },
+      { name: '管理者ページ', href: '/admin' },
     ],
     social: [
       // { name: 'Twitter', href: '#', icon: Twitter },
