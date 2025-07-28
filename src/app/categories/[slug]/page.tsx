@@ -4,6 +4,9 @@ import { ArrowLeft } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import { categories, getPublishedArticlesByCategory } from '@/lib/data';
 
+// 動的レンダリングを明示的に指定
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   return categories.map((category) => ({
     slug: category.slug,

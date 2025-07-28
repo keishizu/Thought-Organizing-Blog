@@ -3,6 +3,9 @@ import { ArrowLeft } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import { getPublishedArticles } from '@/lib/data';
 
+// 動的レンダリングを明示的に指定
+export const dynamic = 'force-dynamic';
+
 export default async function ArticlesPage() {
   const articles = await getPublishedArticles();
   return (

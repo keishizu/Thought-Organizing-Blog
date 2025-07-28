@@ -4,6 +4,9 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import CategorySection from '@/components/blog/CategorySection';
 import { getPublishedArticles } from '@/lib/data';
 
+// 動的レンダリングを明示的に指定
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const allArticles = await getPublishedArticles();
   const recentArticles = allArticles.slice(0, 3);
