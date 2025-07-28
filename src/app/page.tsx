@@ -1,14 +1,13 @@
-'use client';
-
 import Link from 'next/link';
 import { Brain, Compass, Eye } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import CategorySection from '@/components/blog/CategorySection';
-import { getRecentArticles, getRecommendedArticles } from '@/lib/data';
+import { getPublishedArticles } from '@/lib/data';
 
-export default function Home() {
-  const recentArticles = getRecentArticles(3);
-  const recommendedArticles = getRecommendedArticles(3);
+export default async function Home() {
+  const allArticles = await getPublishedArticles();
+  const recentArticles = allArticles.slice(0, 3);
+  const recommendedArticles = allArticles.slice(0, 3);
 
   const categories = [
     {

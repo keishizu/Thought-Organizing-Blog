@@ -43,7 +43,7 @@ export default function ArticleCard({
       </div>
       
       <h3 className="article-card-title mb-3">
-        <Link href={`/posts/${id}`} className="hover:underline">
+        <Link href={`/articles/${id}`} className="hover:underline">
           {title}
         </Link>
       </h3>

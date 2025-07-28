@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
-import { sampleArticles } from '@/lib/data';
+import { getPublishedArticles } from '@/lib/data';
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const articles = await getPublishedArticles();
   return (
     <div>
       {/* ページヘッダー */}
@@ -28,10 +29,10 @@ export default function ArticlesPage() {
       {/* 記事一覧 */}
       <section className="section-padding">
         <div className="container-custom">
-          {sampleArticles.length > 0 ? (
+          {articles.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {sampleArticles.map((article) => (
+                {articles.map((article) => (
                   <ArticleCard
                     key={article.id}
                     id={article.id}
@@ -50,7 +51,7 @@ export default function ArticlesPage() {
               {/* 記事数表示 */}
               <div className="mt-12 text-center">
                 <p className="text-gray-600">
-                  現在 {sampleArticles.length} 件の記事があります
+                  現在 {articles.length} 件の記事があります
                 </p>
               </div>
             </>

@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase-client"
+import { supabase } from "@/lib/supabase"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import LoadingSpinner from "@/components/common/LoadingSpinner"
+import { Lock } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -33,39 +34,49 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <form onSubmit={handleLogin} className="w-full max-w-xs space-y-4" aria-label="管理者ログインフォーム">
-        <h1 className="text-xl font-bold text-center">管理者ログイン</h1>
-        <div className="space-y-2">
-          <Label htmlFor="email">メールアドレス</Label>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            aria-required="true"
-            aria-label="メールアドレス"
-          />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF9F7] to-[#FEFEFE] py-16">
+      <div className="card-base max-w-md w-full p-8 shadow-lg">
+        <div className="flex flex-col items-center mb-8">
+          <div className="bg-primary/10 rounded-full p-4 mb-4">
+            <Lock className="text-primary" size={36} />
+          </div>
+          <h1 className="text-2xl font-semibold page-title mb-2">管理者ログイン</h1>
+          <p className="text-gray-600 text-center page-subtitle text-base">管理者専用ページへのアクセスには認証が必要です。</p>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="password">パスワード</Label>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            aria-required="true"
-            aria-label="パスワード"
-          />
-        </div>
-        <Button type="submit" className="w-full" disabled={loading} aria-busy={loading}>
-          {loading ? <LoadingSpinner /> : "ログイン"}
-        </Button>
-      </form>
+        <form onSubmit={handleLogin} className="space-y-6" aria-label="管理者ログインフォーム">
+          <div className="form-group">
+            <Label htmlFor="email" className="form-label">メールアドレス</Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              aria-required="true"
+              aria-label="メールアドレス"
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <Label htmlFor="password" className="form-label">パスワード</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              aria-required="true"
+              aria-label="パスワード"
+              className="form-input"
+            />
+          </div>
+          <Button type="submit" className="btn-primary w-full flex items-center justify-center gap-2 text-base font-semibold" disabled={loading} aria-busy={loading}>
+            {loading ? <LoadingSpinner /> : <Lock size={18} className="mr-2" />}ログイン
+          </Button>
+        </form>
+      </div>
     </div>
   )
 } 

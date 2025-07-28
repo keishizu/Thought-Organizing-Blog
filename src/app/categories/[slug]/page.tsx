@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
-import { categories, getArticlesByCategory } from '@/lib/data';
+import { categories, getPublishedArticlesByCategory } from '@/lib/data';
 
 export async function generateStaticParams() {
   return categories.map((category) => ({
@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const articles = getArticlesByCategory(slug);
+  const articles = await getPublishedArticlesByCategory(slug);
 
   return (
     <div>

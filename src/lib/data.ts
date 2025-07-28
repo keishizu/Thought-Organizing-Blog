@@ -11,6 +11,26 @@ export interface Article {
   likes: number;
   readTime: string;
   tags: string[];
+  allowComments?: boolean;
+  allowLikes?: boolean;
+}
+
+// データベースから取得した記事の型
+export interface DatabaseArticle {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  tags: string[];
+  status: 'draft' | 'published' | 'private';
+  created_at: string | null;
+  updated_at: string | null;
+  likes: number;
+  image_url?: string | null;
+  author_id: string;
+  allow_comments?: boolean | null;
+  allow_likes?: boolean | null;
 }
 
 export const sampleArticles: Article[] = [
@@ -89,7 +109,135 @@ export const categories = [
   },
 ];
 
-// ユーティリティ関数
+// データベースから公開済み記事を取得する関数
+export async function getPublishedArticles(): Promise<Article[]> {
+  try {
+    const { createServerSupabaseClient } = await import('@/lib/supabase-server');
+    const supabase = await createServerSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('記事取得エラー:', error);
+      return [];
+    }
+
+    return (data || []).map((post: any) => ({
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : '日付不明',
+      author: '管理者',
+      imageUrl: post.image_url || undefined,
+      likes: post.likes || 0,
+      readTime: '約5分', // 将来的に実際の読了時間を計算
+      tags: post.tags || [],
+    }));
+  } catch (error) {
+    console.error('記事取得エラー:', error);
+    return [];
+  }
+}
+
+// カテゴリー別の公開済み記事を取得
+export async function getPublishedArticlesByCategory(categorySlug: string): Promise<Article[]> {
+  const categoryName = categories.find(cat => cat.slug === categorySlug)?.name;
+  if (!categoryName) return [];
+
+  try {
+    const { createServerSupabaseClient } = await import('@/lib/supabase-server');
+    const supabase = await createServerSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('status', 'published')
+      .eq('category', categoryName)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('カテゴリー記事取得エラー:', error);
+      return [];
+    }
+
+    return (data || []).map((post: any) => ({
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : '日付不明',
+      author: '管理者',
+      imageUrl: post.image_url || undefined,
+      likes: post.likes || 0,
+      readTime: '約5分',
+      tags: post.tags || [],
+    }));
+  } catch (error) {
+    console.error('カテゴリー記事取得エラー:', error);
+    return [];
+  }
+}
+
+// 特定の記事を取得
+export async function getPublishedArticleById(id: string): Promise<Article | null> {
+  try {
+    const { createServerSupabaseClient } = await import('@/lib/supabase-server');
+    const supabase = await createServerSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('id', id)
+      .eq('status', 'published')
+      .single();
+
+    if (error || !data) {
+      console.error('記事取得エラー:', error);
+      return null;
+    }
+
+    const post: any = data;
+    return {
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : '日付不明',
+      author: '管理者',
+      imageUrl: post.image_url || undefined,
+      likes: post.likes || 0,
+      readTime: '約5分',
+      tags: post.tags || [],
+      allowComments: post.allow_comments ?? true,
+      allowLikes: post.allow_likes ?? true,
+    };
+  } catch (error) {
+    console.error('記事取得エラー:', error);
+    return null;
+  }
+}
+
+// ユーティリティ関数（後方互換性のため残す）
 export function getArticlesByCategory(categorySlug: string): Article[] {
   const categoryName = categories.find(cat => cat.slug === categorySlug)?.name;
   return sampleArticles.filter(article => article.category === categoryName);

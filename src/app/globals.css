@@ -371,6 +371,52 @@
   }
 }
 
+/* --- Toast Custom Style --- */
+.toast-custom {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 32px rgba(212, 165, 116, 0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  padding: 1.5rem 2rem;
+  min-width: 320px;
+  max-width: 90vw;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.toast-custom .toast-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-family: var(--font-secondary);
+}
+.toast-custom .toast-description {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+.toast-custom .toast-close {
+  border-radius: 9999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  transition: background 0.2s;
+  padding: 0.5rem;
+}
+.toast-custom .toast-close:hover {
+  background: var(--color-accent);
+  color: #fff;
+}
+@media (max-width: 600px) {
+  .toast-custom {
+    min-width: 0;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   .hero-title {

@@ -48,6 +48,8 @@ export type Database = {
       }
       posts: {
         Row: {
+          allow_comments: boolean | null
+          allow_likes: boolean | null
           author_id: string
           category: string
           content: string
@@ -56,11 +58,14 @@ export type Database = {
           id: string
           image_url: string | null
           likes: number
+          status: string | null
           tags: string[]
           title: string
           updated_at: string | null
         }
         Insert: {
+          allow_comments?: boolean | null
+          allow_likes?: boolean | null
           author_id: string
           category: string
           content: string
@@ -69,11 +74,14 @@ export type Database = {
           id?: string
           image_url?: string | null
           likes?: number
+          status?: string | null
           tags?: string[]
           title: string
           updated_at?: string | null
         }
         Update: {
+          allow_comments?: boolean | null
+          allow_likes?: boolean | null
           author_id?: string
           category?: string
           content?: string
@@ -82,6 +90,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           likes?: number
+          status?: string | null
           tags?: string[]
           title?: string
           updated_at?: string | null
