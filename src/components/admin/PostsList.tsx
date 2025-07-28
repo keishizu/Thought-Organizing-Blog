@@ -31,13 +31,13 @@ interface Post {
   content: string
   category: string
   tags: string[]
-  status?: 'draft' | 'published' | 'private'
+  status: 'draft' | 'published' | 'private'
   created_at: string | null
   updated_at: string | null
   likes: number
   image_url?: string | null
-  allow_comments?: boolean | null
-  allow_likes?: boolean | null
+  allow_comments: boolean
+  allow_likes: boolean
 }
 
 export default function PostsList() {
@@ -68,7 +68,24 @@ export default function PostsList() {
         return
       }
 
-      setPosts(data || [])
+      // データベースから取得したデータを適切な型に変換
+      const typedPosts: Post[] = (data || []).map((post: any) => ({
+        id: post.id,
+        title: post.title,
+        excerpt: post.excerpt,
+        content: post.content,
+        category: post.category,
+        tags: post.tags || [],
+        status: post.status as 'draft' | 'published' | 'private',
+        created_at: post.created_at,
+        updated_at: post.updated_at,
+        likes: post.likes || 0,
+        image_url: post.image_url,
+        allow_comments: post.allow_comments ?? true,
+        allow_likes: post.allow_likes ?? true
+      }))
+
+      setPosts(typedPosts)
     } catch (error) {
       console.error('記事取得エラー:', error)
       toast({
