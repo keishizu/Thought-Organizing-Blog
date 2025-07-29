@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Brain, Compass, Eye } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import CategorySection from '@/components/blog/CategorySection';
-import { getPublishedArticles } from '@/lib/data';
+import { getPublishedArticles, getRecommendedArticles } from '@/lib/data';
 
 // 動的レンダリングを明示的に指定
 export const dynamic = 'force-dynamic';
@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   const allArticles = await getPublishedArticles();
   const recentArticles = allArticles.slice(0, 3);
-  const recommendedArticles = allArticles.slice(0, 3);
+  const recommendedArticles = await getRecommendedArticles();
 
   const categories = [
     {
@@ -56,10 +56,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* カテゴリ紹介セクション */}
+      {/* カテゴリー紹介セクション */}
       <section className="section-padding">
         <div className="container-custom">
-          <h2 className="section-title">カテゴリから探す</h2>
+          <h2 className="section-title">カテゴリーから探す</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {categories.map((category) => (
               <CategorySection
@@ -75,32 +75,34 @@ export default async function Home() {
       </section>
 
       {/* おすすめ記事セクション */}
-      <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%)'}}>
-        <div className="container-custom">
-          <h2 className="section-title">おすすめの記事</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {recommendedArticles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                id={article.id}
-                title={article.title}
-                excerpt={article.excerpt}
-                category={article.category}
-                date={article.date}
-                author={article.author}
-                imageUrl={article.imageUrl}
-                likes={article.likes}
-                readTime={article.readTime}
-              />
-            ))}
+      {recommendedArticles.length > 0 && (
+        <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%)'}}>
+          <div className="container-custom">
+            <h2 className="section-title">おすすめの記事</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {recommendedArticles.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  id={article.id}
+                  title={article.title}
+                  excerpt={article.excerpt}
+                  category={article.category}
+                  date={article.date}
+                  author={article.author}
+                  imageUrl={article.imageUrl}
+                  likes={article.likes}
+                  readTime={article.readTime}
+                />
+              ))}
+            </div>
+            <div className="text-center">
+              <Link href="/articles" className="btn-secondary">
+                すべての記事を見る
+              </Link>
+            </div>
           </div>
-          <div className="text-center">
-            <Link href="/articles" className="btn-secondary">
-              すべての記事を見る
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 新着記事セクション */}
       <section id="recent-articles" className="section-padding">

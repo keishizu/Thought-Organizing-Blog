@@ -31,6 +31,7 @@ export interface DatabaseArticle {
   author_id: string;
   allow_comments?: boolean | null;
   allow_likes?: boolean | null;
+  is_recommended?: boolean | null;
 }
 
 export const sampleArticles: Article[] = [
@@ -149,6 +150,48 @@ export async function getPublishedArticles(): Promise<Article[]> {
   }
 }
 
+// おすすめ記事を取得する関数
+export async function getRecommendedArticles(): Promise<Article[]> {
+  try {
+    const { createServerSupabaseClient } = await import('@/lib/supabase-server');
+    const supabase = await createServerSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('status', 'published')
+      .eq('is_recommended', true)
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    if (error) {
+      console.error('おすすめ記事取得エラー:', error);
+      return [];
+    }
+
+    return (data || []).map((post: any) => ({
+      id: post.id,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : '日付不明',
+      author: '管理者',
+      imageUrl: post.image_url || undefined,
+      likes: post.likes || 0,
+      readTime: '約5分',
+      tags: post.tags || [],
+    }));
+  } catch (error) {
+    console.error('おすすめ記事取得エラー:', error);
+    return [];
+  }
+}
+
 // カテゴリー別の公開済み記事を取得
 export async function getPublishedArticlesByCategory(categorySlug: string): Promise<Article[]> {
   const categoryName = categories.find(cat => cat.slug === categorySlug)?.name;
@@ -251,6 +294,6 @@ export function getRecentArticles(limit: number = 3): Article[] {
   return sampleArticles.slice(0, limit);
 }
 
-export function getRecommendedArticles(limit: number = 4): Article[] {
+export function getSampleRecommendedArticles(limit: number = 4): Article[] {
   return sampleArticles.slice(0, limit);
 }

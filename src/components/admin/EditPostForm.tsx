@@ -28,6 +28,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
     content: currentPost.content || '',
     allowComments: currentPost.allow_comments ?? true, // データベースの値を取得、nullの場合はtrue
     allowLikes: currentPost.allow_likes ?? true, // データベースの値を取得、nullの場合はtrue
+    isRecommended: currentPost.is_recommended ?? false, // データベースの値を取得、nullの場合はfalse
     status: currentPost.status || 'draft'
   }), [currentPost])
 
@@ -52,6 +53,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         status: data.status,
         allow_comments: data.allowComments,
         allow_likes: data.allowLikes,
+        is_recommended: data.isRecommended,
         updated_at: new Date().toISOString()
       }
 
@@ -114,6 +116,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         status: data.status,
         allow_comments: data.allowComments,
         allow_likes: data.allowLikes,
+        is_recommended: data.isRecommended,
         updated_at: new Date().toISOString()
       }
 

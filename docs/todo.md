@@ -29,7 +29,7 @@
 ---
 
 ## フェーズ4：DBテーブル設計（Supabase）
-- [x] 記事テーブル `posts` の設計・作成（Cloudflare Images対応、検索対応、タグ・カテゴリ設計済）
+- [x] 記事テーブル `posts` の設計・作成（Cloudflare Images対応、検索対応、タグ・カテゴリー設計済）
 - [x] コメントテーブル `comments` の設計・作成（匿名投稿／管理者削除対応）
 - [x] 外部キー／インデックス設計（GINインデックス・CASCADE削除など）
 - [x] Supabase RLSポリシー設計（管理者限定操作／匿名投稿許可など）
@@ -45,30 +45,44 @@
 ---
 
 ## フェーズ6：記事管理機能の実装（UI & CRUD）
+
 - [x] 投稿・更新・削除のバリデーション処理  
   - `postFormSchema` による Zod バリデーション済み
+
 - [x] Markdownまたはリッチテキスト対応のエディター導入（例：TipTap）  
   - `TipTapEditor` を導入し、本文入力に使用済み
+
 - [ ] 管理者ページ（記事投稿／編集／削除）画面の実装  
   - [x] 投稿画面 `/admin/posts/new`（PostForm使用可）  
-  - [ ] 編集画面 `/admin/posts/[id]/edit`（初期値読み込み＋更新処理）  
-  - [ ] 一覧画面 `/admin/posts`（記事一覧・編集・削除ボタン）  
-  - [ ] 削除機能の実装（Supabase `delete`）
+  - [x] 編集画面 `/admin/posts/[id]/edit`（初期値読み込み＋更新処理 実装済み）  
+  - [x] 一覧画面 `/admin/posts`（記事一覧・編集・削除ボタン UI 実装済み）  
+  - [ ] 削除機能の実装（Supabase `delete` 処理済み／Cloudflare Images 側の削除は未実装）
+
 - [ ] Cloudflare Images アップロード機能の実装  
   - [x] `ImageUpload.tsx` によるアップロードUI完成  
   - [ ] `uploadImage(file)` を Cloudflare Images API に対応（仮実装 → 本実装へ）
+
 - [ ] posts への新規登録処理（画像URL含む）  
   - [ ] `PostForm.tsx` の `onSubmit()` 経由で Supabase に `insert`  
   - [ ] 投稿完了時に `/admin/posts` へリダイレクト  
   - [ ] エラー時にトースト表示（`use-toast.ts` 使用予定）
+
 - [ ] いいね、コメント機能の実装（Supabase + RLS対応）  
   - [ ] UI側のリアクションコンポーネント設計  
   - [ ] Supabase側の `likes`, `comments` テーブルと RLS 設定（別フェーズで分離も検討可）
 
+- [x] オススメ記事管理機能の実装  
+  - [x] 投稿／編集画面に「おすすめ記事に設定」トグルを追加  
+  - [x] 設定済みオススメ記事が3件以上ある場合、トグルをオンにするとトーストでエラーを表示  
+  - [x] 記事一覧画面 `/admin/posts` にて、オススメ記事には ★ マークを表示（視覚的に区別）  
+  - [x] Supabase `posts` テーブルに `is_recommended: boolean` カラムを追加  
+  - [x] トップページの「おすすめ記事」セクションに `is_recommended = true` の記事を最大3件表示
+
+
 
 ---
 
-## フェーズ7：検索＆回遊導線の実装（New）
+## フェーズ7：検索＆回遊導線の実装
 - [ ] トップページに検索フォーム設置（自由入力対応）
 - [ ] `/search?q=キーワード` の検索結果ページ実装
 - [ ] タグクリック時に `/tags/[slug]` に遷移するタグ別一覧ページ実装
@@ -85,7 +99,7 @@
 - [ ] 本番ドメインのSSL設定確認
 - [ ] Supabase Auth本番設定の確認（redirect URLなど）
 - [ ] メタ情報の追加（タイトル・ディスクリプション・OGP対応）
-  - [ ] 個別ページのメタ情報設定（記事詳細、About、記事一覧、カテゴリページ）
+  - [ ] 個別ページのメタ情報設定（記事詳細、About、記事一覧、カテゴリーページ）
   - [ ] OGP画像の設定（デフォルト画像、記事別画像）
   - [ ] Twitter Card対応
 

@@ -7,6 +7,7 @@ export interface PostFormData {
   content: string // HTMLで保存
   allowComments: boolean
   allowLikes: boolean
+  isRecommended: boolean
   status: 'draft' | 'published' | 'private'
 }
 

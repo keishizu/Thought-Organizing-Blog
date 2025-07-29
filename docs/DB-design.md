@@ -18,7 +18,7 @@
 | `excerpt`      | `text`     | ✅   | 記事の抜粋・要約（検索・カード用）       |
 | `content`      | `text`     | ✅   | 記事本文（Markdown／リッチテキスト形式） |
 | `tags`         | `text[]`   | ✅   | タグ一覧（検索・絞り込み対象）           |
-| `category`     | `text`     | ✅   | カテゴリ名（3分類から選択）               |
+| `category`     | `text`     | ✅   | カテゴリー名（3分類から選択）               |
 | `image_url`    | `text`     | ❌   | トップ画像URL（Cloudflare Images）        |
 | `likes`        | `integer`  | ✅   | いいね数（初期値 0）                      |
 | `author_id`    | `uuid`     | ✅   | 投稿者ID（Supabase Auth）                 |

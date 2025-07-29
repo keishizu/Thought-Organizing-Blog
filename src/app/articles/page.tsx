@@ -16,7 +16,7 @@ export default async function ArticlesPage() {
           <h1 className="page-title">記事一覧</h1>
           <p className="page-subtitle">
             静かな図書室のすべての記事をご覧いただけます。<br />
-            思考と行動、キャリアと選択、気づきと日常の3つのカテゴリから、あなたに響く記事を見つけてください。
+            思考と行動、キャリアと選択、気づきと日常の3つのカテゴリーから、あなたに響く記事を見つけてください。
           </p>
         </div>
       </section>

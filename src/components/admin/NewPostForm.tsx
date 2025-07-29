@@ -34,7 +34,8 @@ export default function NewPostForm() {
         likes: 0,
         status: data.status,
         allow_comments: data.allowComments,
-        allow_likes: data.allowLikes
+        allow_likes: data.allowLikes,
+        is_recommended: data.isRecommended
       }
 
       // Supabaseに投稿
@@ -91,7 +92,8 @@ export default function NewPostForm() {
         likes: 0,
         status: data.status,
         allow_comments: data.allowComments,
-        allow_likes: data.allowLikes
+        allow_likes: data.allowLikes,
+        is_recommended: data.isRecommended
       }
 
       // Supabaseに保存

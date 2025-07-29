@@ -96,7 +96,7 @@ export default function AdminPage() {
                 <Shield size={24} className="text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">管理者情報</h2>
+                <h2 className="text-xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>管理者情報</h2>
                 <p className="text-gray-600 text-sm">現在ログイン中のアカウント情報</p>
               </div>
             </div>
@@ -124,7 +124,7 @@ export default function AdminPage() {
                   <Plus size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">新規記事投稿</h3>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>新規記事投稿</h3>
                   <p className="text-base text-gray-600">新しい記事を作成して投稿します</p>
                 </div>
               </div>
@@ -142,12 +142,12 @@ export default function AdminPage() {
                   <FileText size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">記事管理</h3>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>記事管理</h3>
                   <p className="text-base text-gray-600">既存の記事を編集・削除します</p>
                 </div>
               </div>
               <Link href="/admin/posts">
-                <Button variant="outline" className="w-full text-lg py-4">
+                <Button className="btn-primary w-full text-lg py-4">
                   記事一覧を表示
                 </Button>
               </Link>
@@ -160,7 +160,7 @@ export default function AdminPage() {
                   <Settings size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">サイト設定</h3>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>サイト設定</h3>
                   <p className="text-base text-gray-600">サイトの基本設定を変更します</p>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function AdminPage() {
                   <User size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">アカウント管理</h3>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>アカウント管理</h3>
                   <p className="text-base text-gray-600">パスワード変更などのアカウント設定</p>
                 </div>
               </div>

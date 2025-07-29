@@ -17,6 +17,8 @@ import TipTapEditor from '@/components/editor/TipTapEditor'
 import ImageUpload from '@/components/admin/ImageUpload'
 import { PostFormData, PostFormProps, CATEGORIES } from '@/types/post'
 import { postFormSchema } from '@/lib/validations/post'
+import { supabase } from '@/lib/supabase'
+import { useToast } from '@/hooks/use-toast'
 
 export default function PostForm({ 
   initialValues, 
@@ -25,6 +27,7 @@ export default function PostForm({
   isLoading = false,
   isEdit = false
 }: PostFormProps) {
+  const { toast } = useToast()
   const [formData, setFormData] = useState<PostFormData>({
     title: '',
     subtitle: '',
@@ -34,13 +37,14 @@ export default function PostForm({
     content: '',
     allowComments: true,
     allowLikes: true,
+    isRecommended: false,
     status: 'draft'
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [tagInput, setTagInput] = useState('')
 
-  // カテゴリとアイコンのマッピング
+  // カテゴリーとアイコンのマッピング
   const categoryIcons = {
     "思考と行動": BookOpen,
     "キャリアと選択": Star,
@@ -65,8 +69,47 @@ export default function PostForm({
     initialValues?.content,
     initialValues?.allowComments,
     initialValues?.allowLikes,
+    initialValues?.isRecommended,
     initialValues?.status
   ])
+
+  // おすすめ記事件数チェック
+  const checkRecommendedCount = async (): Promise<boolean> => {
+    try {
+      const { count, error } = await supabase
+        .from('posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_recommended', true)
+
+      if (error) {
+        console.error('おすすめ記事件数取得エラー:', error)
+        return false
+      }
+
+      return (count || 0) < 3
+    } catch (error) {
+      console.error('おすすめ記事件数チェックエラー:', error)
+      return false
+    }
+  }
+
+  // おすすめ記事トグル処理
+  const handleRecommendedToggle = async (checked: boolean) => {
+    if (checked) {
+      // おすすめ記事を追加する場合、件数チェック
+      const canAdd = await checkRecommendedCount()
+      if (!canAdd) {
+        toast({
+          title: "制限エラー",
+          description: "おすすめ記事は最大3件までです。",
+          variant: "destructive"
+        })
+        return
+      }
+    }
+
+    setFormData(prev => ({ ...prev, isRecommended: checked }))
+  }
 
   // バリデーション関数
   const validateForm = (): boolean => {
@@ -162,7 +205,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <Label className="text-lg font-medium">カバー画像</Label>
+          <Label className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>カバー画像</Label>
         </div>
         <ImageUpload
           imageUrl={formData.imageUrl}
@@ -179,7 +222,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
           </div>
-          <Label htmlFor="title" className="text-lg font-medium">タイトル *</Label>
+          <Label htmlFor="title" className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>タイトル *</Label>
         </div>
         <Input
           id="title"
@@ -205,7 +248,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <Label htmlFor="subtitle" className="text-lg font-medium">サブタイトル</Label>
+          <Label htmlFor="subtitle" className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>サブタイトル</Label>
         </div>
         <Input
           id="subtitle"
@@ -230,7 +273,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
           </div>
-          <Label htmlFor="category" className="text-lg font-medium">カテゴリー *</Label>
+          <Label htmlFor="category" className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>カテゴリー *</Label>
         </div>
         <Select
           value={formData.category}
@@ -270,7 +313,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
           </div>
-          <Label htmlFor="tags" className="text-lg font-medium">タグ</Label>
+          <Label htmlFor="tags" className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>タグ</Label>
         </div>
         <div className="flex gap-2">
           <Input
@@ -323,7 +366,7 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <Label className="text-lg font-medium">本文 *</Label>
+          <Label className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>本文 *</Label>
         </div>
         <TipTapEditor
           content={formData.content}
@@ -346,9 +389,48 @@ export default function PostForm({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium">設定</h3>
+          <h3 className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>設定</h3>
         </div>
         
+        {/* おすすめ記事設定 */}
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+              <Star className="w-4 h-4 text-yellow-600" />
+            </div>
+            <div className="space-y-0.5">
+              <Label>おすすめ記事に設定</Label>
+              <p className="text-sm text-gray-500">
+                トップページのおすすめ欄に表示されます（最大3件まで）
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-medium ${formData.isRecommended ? 'text-green-600' : 'text-gray-500'}`}>
+              {formData.isRecommended ? '有効' : '無効'}
+            </span>
+            <button
+              type="button"
+              onClick={() => handleRecommendedToggle(!formData.isRecommended)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                formData.isRecommended ? 'bg-green-600' : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                  formData.isRecommended ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+              {formData.isRecommended && (
+                <Check className="absolute left-1 h-3 w-3 text-white" />
+              )}
+              {!formData.isRecommended && (
+                <XIcon className="absolute right-1 h-3 w-3 text-gray-400" />
+              )}
+            </button>
+          </div>
+        </div>
+
         {/* コメント許可 */}
         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-3">

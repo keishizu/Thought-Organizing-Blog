@@ -8,7 +8,7 @@ export const postFormSchema = z.object({
     .max(100, "サブタイトルは100文字以内で入力してください")
     .optional(),
   category: z.string()
-    .min(1, "カテゴリは必須です"),
+    .min(1, "カテゴリーは必須です"),
   tags: z.array(z.string())
     .max(5, "タグは最大5個まで設定できます"),
   imageUrl: z.string().optional(),
@@ -21,6 +21,7 @@ export const postFormSchema = z.object({
     }, "本文を入力してください"),
   allowComments: z.boolean(),
   allowLikes: z.boolean(),
+  isRecommended: z.boolean(),
   status: z.enum(['draft', 'published', 'private'])
 })
 

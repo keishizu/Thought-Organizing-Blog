@@ -20,7 +20,8 @@ import {
   MessageCircle,
   Globe,
   Lock,
-  FileText
+  FileText,
+  Star
 } from "lucide-react"
 import Link from "next/link"
 
@@ -38,6 +39,7 @@ interface Post {
   image_url?: string | null
   allow_comments: boolean
   allow_likes: boolean
+  is_recommended: boolean
 }
 
 export default function PostsList() {
@@ -82,7 +84,8 @@ export default function PostsList() {
         likes: post.likes || 0,
         image_url: post.image_url,
         allow_comments: post.allow_comments ?? true,
-        allow_likes: post.allow_likes ?? true
+        allow_likes: post.allow_likes ?? true,
+        is_recommended: post.is_recommended ?? false
       }))
 
       setPosts(typedPosts)
@@ -228,9 +231,14 @@ export default function PostsList() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="article-card-title text-xl font-semibold mb-2 line-clamp-2">
-                        {post.title}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="article-card-title text-xl font-semibold line-clamp-2" style={{ fontFamily: 'var(--font-secondary)' }}>
+                          {post.title}
+                        </h3>
+                        {post.is_recommended && (
+                          <Star size={16} className="text-yellow-500 fill-yellow-500" />
+                        )}
+                      </div>
                       <p className="article-card-excerpt text-gray-600 mb-4 line-clamp-2">
                         {post.excerpt}
                       </p>

@@ -56,9 +56,9 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* カテゴリ */}
+          {/* カテゴリー */}
           <div>
-            <h3 className="footer-title">カテゴリ</h3>
+            <h3 className="footer-title">カテゴリー</h3>
             <ul className="space-y-2">
               {footerLinks.categories.map((item) => (
                 <li key={item.name}>
