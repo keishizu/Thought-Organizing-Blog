@@ -146,7 +146,21 @@ export default function PostForm({
       allowLikes: formData.allowLikes.toString()
     })
 
-    window.open(`/admin/posts/preview?${params.toString()}`, '_blank')
+    // URLの総長をチェック（サーバーサイドアップロードの場合は制限を緩和）
+    const fullUrl = `/admin/posts/preview?${params.toString()}`
+    console.log('Full preview URL length:', fullUrl.length)
+    
+    if (fullUrl.length > 8000) {
+      console.log('Preview URL too long:', fullUrl.length, 'characters')
+      toast({
+        title: "プレビュー制限",
+        description: "データが大きすぎるため、プレビューを表示できません。内容を簡潔にしてから再度お試しください。",
+        variant: "destructive"
+      })
+      return
+    }
+
+    window.open(fullUrl, '_blank')
   }
 
   // フォーム送信処理
@@ -182,15 +196,93 @@ export default function PostForm({
     }))
   }
 
-  // 画像アップロード処理（仮実装）
+  // 画像アップロード処理（サーバーサイド版）
   const uploadImage = async (file: File): Promise<string> => {
-    // 実際の実装では、ここでCloudflare Images APIを呼び出す
-    // 現在は仮の実装として、FileReaderを使用
-    return new Promise((resolve) => {
-      const reader = new FileReader()
-      reader.onload = () => {
-        resolve(reader.result as string)
+    try {
+      // クライアントサイドで画像をリサイズ
+      const resizedFile = await resizeImage(file)
+      
+      const formData = new FormData()
+      formData.append('file', resizedFile)
+
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Upload failed')
       }
+
+      const data = await response.json()
+      return data.url
+    } catch (error) {
+      console.error('Upload error:', error)
+      throw error
+    }
+  }
+
+  // 画像リサイズ処理
+  const resizeImage = async (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      
+      reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          
+          if (!ctx) {
+            reject(new Error('Canvas context could not be created'))
+            return
+          }
+
+          // 最大サイズを設定
+          const maxWidth = 800
+          const maxHeight = 600
+          
+          let { width, height } = img
+          
+          // アスペクト比を保ちながらリサイズ
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height)
+            width = Math.round(width * ratio)
+            height = Math.round(height * ratio)
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          
+          // 画像を描画
+          ctx.drawImage(img, 0, 0, width, height)
+          
+          // JPEG形式で圧縮
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const resizedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              })
+              resolve(resizedFile)
+            } else {
+              reject(new Error('Failed to create blob'))
+            }
+          }, 'image/jpeg', 0.8)
+        }
+        
+        img.onerror = () => {
+          reject(new Error('Failed to load image'))
+        }
+        
+        img.src = reader.result as string
+      }
+      
+      reader.onerror = () => {
+        reject(new Error('Failed to read file'))
+      }
+      
       reader.readAsDataURL(file)
     })
   }

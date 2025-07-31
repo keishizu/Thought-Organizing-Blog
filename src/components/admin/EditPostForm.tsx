@@ -42,6 +42,27 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         throw new Error("認証エラー")
       }
 
+      // 画像が変更された場合、古い画像を削除
+      if (data.imageUrl !== currentPost.image_url && currentPost.image_url) {
+        try {
+          const deleteResponse = await fetch('/api/delete-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl: currentPost.image_url })
+          })
+
+          if (!deleteResponse.ok) {
+            console.warn('Failed to delete old image:', await deleteResponse.text())
+          } else {
+            console.log('Old image deleted successfully')
+          }
+        } catch (error) {
+          console.warn('Error deleting old image:', error)
+        }
+      }
+
       // 記事データを準備
       const postData = {
         title: data.title,
@@ -103,6 +124,27 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         throw new Error("認証エラー")
+      }
+
+      // 画像が変更された場合、古い画像を削除
+      if (data.imageUrl !== currentPost.image_url && currentPost.image_url) {
+        try {
+          const deleteResponse = await fetch('/api/delete-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl: currentPost.image_url })
+          })
+
+          if (!deleteResponse.ok) {
+            console.warn('Failed to delete old image:', await deleteResponse.text())
+          } else {
+            console.log('Old image deleted successfully')
+          }
+        } catch (error) {
+          console.warn('Error deleting old image:', error)
+        }
       }
 
       // 下書きデータを準備

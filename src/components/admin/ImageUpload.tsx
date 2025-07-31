@@ -28,9 +28,9 @@ export default function ImageUpload({
     const file = event.target.files?.[0]
     if (!file) return
 
-    // ファイルサイズチェック (5MB制限)
-    if (file.size > 5 * 1024 * 1024) {
-      setError('ファイルサイズは5MB以下にしてください')
+    // ファイルサイズチェック (2MB制限に変更)
+    if (file.size > 2 * 1024 * 1024) {
+      setError('ファイルサイズは2MB以下にしてください')
       return
     }
 
@@ -45,10 +45,13 @@ export default function ImageUpload({
 
     try {
       const uploadedUrl = await uploadImage(file)
+      
+      console.log('Uploaded URL:', uploadedUrl)
+      
       onImageChange(uploadedUrl)
     } catch (err) {
-      setError('画像のアップロードに失敗しました')
       console.error('Upload error:', err)
+      setError('画像のアップロードに失敗しました')
     } finally {
       setIsUploading(false)
     }
@@ -106,7 +109,7 @@ export default function ImageUpload({
             </Button>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            PNG, JPG, GIF up to 5MB
+            PNG, JPG, GIF up to 2MB
           </p>
         </div>
       )}

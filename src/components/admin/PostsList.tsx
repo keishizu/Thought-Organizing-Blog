@@ -123,6 +123,19 @@ export default function PostsList() {
     setDeletingId(postId)
     
     try {
+      // 削除前に記事の画像URLを取得
+      const { data: post, error: fetchError } = await supabase
+        .from('posts')
+        .select('image_url')
+        .eq('id', postId)
+        .single()
+
+      if (fetchError) {
+        console.error('記事取得エラー:', fetchError)
+        throw new Error(fetchError.message)
+      }
+
+      // 記事を削除
       const { error } = await supabase
         .from('posts')
         .delete()
@@ -131,6 +144,27 @@ export default function PostsList() {
       if (error) {
         console.error('削除エラー:', error)
         throw new Error(error.message)
+      }
+
+      // 画像が存在する場合、画像も削除
+      if (post?.image_url) {
+        try {
+          const deleteResponse = await fetch('/api/delete-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl: post.image_url })
+          })
+
+          if (!deleteResponse.ok) {
+            console.warn('Failed to delete image:', await deleteResponse.text())
+          } else {
+            console.log('Image deleted successfully')
+          }
+        } catch (error) {
+          console.warn('Error deleting image:', error)
+        }
       }
 
       toast({
