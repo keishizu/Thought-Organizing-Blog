@@ -26,20 +26,30 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // ここでフォーム送信処理（実際にはバックエンドAPIやSupabaseに送信）
     try {
-      // 仮の処理
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Form submitted:', formData);
-      
-      alert('メッセージを送信しました。ありがとうございます！');
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('メッセージを送信しました。ありがとうございます！');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        alert(result.error || '送信中にエラーが発生しました。もう一度お試しください。');
+      }
     } catch (error) {
+      console.error('送信エラー:', error);
       alert('送信中にエラーが発生しました。もう一度お試しください。');
     } finally {
       setIsSubmitting(false);

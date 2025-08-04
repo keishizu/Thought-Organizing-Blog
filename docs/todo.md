@@ -29,7 +29,7 @@
 ---
 
 ## フェーズ4：DBテーブル設計（Supabase）
-- [x] 記事テーブル `posts` の設計・作成（Cloudflare Images対応、検索対応、タグ・カテゴリー設計済）
+- [x] 記事テーブル `posts` の設計・作成（画像URL対応、検索対応、タグ・カテゴリー設計済）
 - [x] コメントテーブル `comments` の設計・作成（匿名投稿／管理者削除対応）
 - [x] 外部キー／インデックス設計（GINインデックス・CASCADE削除など）
 - [x] Supabase RLSポリシー設計（管理者限定操作／匿名投稿許可など）
@@ -52,24 +52,29 @@
 - [x] Markdownまたはリッチテキスト対応のエディター導入（例：TipTap）  
   - `TipTapEditor` を導入し、本文入力に使用済み
 
-- [ ] 管理者ページ（記事投稿／編集／削除）画面の実装  
+- [x] 管理者ページ（記事投稿／編集／削除）画面の実装  
   - [x] 投稿画面 `/admin/posts/new`（PostForm使用可）  
   - [x] 編集画面 `/admin/posts/[id]/edit`（初期値読み込み＋更新処理 実装済み）  
   - [x] 一覧画面 `/admin/posts`（記事一覧・編集・削除ボタン UI 実装済み）  
-  - [ ] 削除機能の実装（Supabase `delete` 処理済み／Cloudflare Images 側の削除は未実装）
+  - [x] 削除機能の実装（Supabase `delete` 処理済み／ローカルストレージ側の削除も実装済み）
 
-- [ ] Cloudflare Images アップロード機能の実装  
+- [x] ローカルストレージ画像アップロード機能の実装  
   - [x] `ImageUpload.tsx` によるアップロードUI完成  
-  - [ ] `uploadImage(file)` を Cloudflare Images API に対応（仮実装 → 本実装へ）
+  - [x] `/api/upload-image` API エンドポイントの実装（ローカルストレージ版）
+  - [x] 画像リサイズ機能の実装
+  - [x] ファイルサイズ・形式チェック機能の実装
 
-- [ ] posts への新規登録処理（画像URL含む）  
-  - [ ] `PostForm.tsx` の `onSubmit()` 経由で Supabase に `insert`  
-  - [ ] 投稿完了時に `/admin/posts` へリダイレクト  
-  - [ ] エラー時にトースト表示（`use-toast.ts` 使用予定）
+- [x] posts への新規登録処理（画像URL含む）  
+  - [x] `PostForm.tsx` の `onSubmit()` 経由で Supabase に `insert`  
+  - [x] 投稿完了時に `/admin/posts` へリダイレクト  
+  - [x] エラー時にトースト表示（`use-toast.ts` 使用済み）
 
-- [ ] いいね、コメント機能の実装（Supabase + RLS対応）  
-  - [ ] UI側のリアクションコンポーネント設計  
-  - [ ] Supabase側の `likes`, `comments` テーブルと RLS 設定（別フェーズで分離も検討可）
+- [x] いいね、コメント機能の実装（Supabase + RLS対応）  
+  - [x] UI側のリアクションコンポーネント設計（`PostInteractions.tsx` 実装済み）
+  - [x] Supabase側の `likes`, `comments` テーブルと RLS 設定（実装済み）
+  - [x] いいね機能のAPI実装（`/api/likes` 実装済み）
+  - [x] コメント機能のAPI実装（`/api/comments` 実装済み）
+  - [x] 匿名ユーザー対応（いいね・コメント機能で匿名ID生成済み）
 
 - [x] オススメ記事管理機能の実装  
   - [x] 投稿／編集画面に「おすすめ記事に設定」トグルを追加  
@@ -78,7 +83,26 @@
   - [x] Supabase `posts` テーブルに `is_recommended: boolean` カラムを追加  
   - [x] トップページの「おすすめ記事」セクションに `is_recommended = true` の記事を最大3件表示
 
+- [x] 画像削除機能の実装
+  - [x] `/api/delete-image` API エンドポイントの実装
+  - [x] 記事削除時の画像自動削除機能
+  - [x] 記事編集時の古い画像削除機能
 
+- [x] プレビュー機能の実装
+  - [x] 記事投稿・編集画面でのプレビュー機能
+  - [x] プレビューページ `/admin/posts/preview` の実装
+
+- [x] プロフィール画像管理機能の実装
+  - [x] `/api/upload-profile-image` API エンドポイントの実装
+  - [x] `/api/delete-profile-image` API エンドポイントの実装
+  - [x] 管理者アカウントページでのプロフィール画像管理機能
+
+- [x] アカウント管理機能の実装
+  - [x] アカウント管理画面 `/admin/account` の実装
+  - [x] 管理者名の編集・更新機能（Supabase Auth user_metadata対応）
+  - [x] プロフィール画像のアップロード・表示機能
+  - [x] アカウント情報の表示（メールアドレス、最終ログイン日時）
+  - [x] 管理者ダッシュボードからのアカウント管理画面への導線
 
 ---
 

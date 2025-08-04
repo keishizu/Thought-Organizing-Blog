@@ -9,7 +9,6 @@ interface ArticleCardProps {
   excerpt: string;
   category: string;
   date: string;
-  author: string;
   imageUrl?: string;
   likes: number;
   readTime: string;
@@ -21,7 +20,6 @@ export default function ArticleCard({
   excerpt,
   category,
   date,
-  author,
   imageUrl,
   likes,
   readTime,
@@ -33,7 +31,7 @@ export default function ArticleCard({
           <img
             src={imageUrl}
             alt={title}
-            className="article-card-image group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
           />
         </div>
       )}
@@ -57,10 +55,6 @@ export default function ArticleCard({
           <span className="flex items-center space-x-1">
             <Calendar size={14} />
             <span>{date}</span>
-          </span>
-          <span className="flex items-center space-x-1">
-            <User size={14} />
-            <span>{author}</span>
           </span>
           <span>{readTime}</span>
         </div>

@@ -11,7 +11,6 @@ interface ArticlePreviewProps {
     content: string;
     category: string;
     date: string;
-    author: string;
     imageUrl?: string;
     likes: number;
     readTime: string;
@@ -50,10 +49,6 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
               <Calendar size={16} className="mr-2" />
               {article.date}
             </span>
-            <span className="flex items-center">
-              <User size={16} className="mr-2" />
-              {article.author}
-            </span>
             <span>{article.readTime}</span>
           </div>
 
@@ -91,6 +86,7 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
         {/* いいね・コメントセクション */}
         <PostInteractions 
           initialLikes={article.likes} 
+          postId={article.id}
           allowComments={article.allowComments}
           allowLikes={article.allowLikes}
         />
@@ -102,7 +98,7 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
               <User size={24} className="text-gray-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">{article.author}</h3>
+              <h3 className="text-lg font-semibold mb-2">管理者</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 思考の整理と言葉の力を信じて、日々の気づきを綴っています。
                 このサイトが読者の皆さんにとって、新しい視点を得るきっかけになれば嬉しいです。

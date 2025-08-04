@@ -43,7 +43,6 @@ export default async function ArticlesPage() {
                     excerpt={article.excerpt}
                     category={article.category}
                     date={article.date}
-                    author={article.author}
                     imageUrl={article.imageUrl}
                     likes={article.likes}
                     readTime={article.readTime}

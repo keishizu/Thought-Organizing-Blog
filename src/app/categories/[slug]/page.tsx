@@ -63,7 +63,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     excerpt={article.excerpt}
                     category={article.category}
                     date={article.date}
-                    author={article.author}
                     imageUrl={article.imageUrl}
                     likes={article.likes}
                     readTime={article.readTime}

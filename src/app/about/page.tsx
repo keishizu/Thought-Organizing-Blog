@@ -1,8 +1,29 @@
 'use client';
 
 import { User, Heart, BookOpen, Coffee } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function AboutPage() {
+  const [adminName, setAdminName] = useState("管理者");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAdminProfile = async () => {
+      try {
+        const response = await fetch('/api/admin/profile');
+        const data = await response.json();
+        setAdminName(data.adminName);
+        setProfileImage(data.profileImage);
+      } catch (error) {
+        console.error('Error fetching admin profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminProfile();
+  }, []);
   return (
     <div>
       {/* ページヘッダー */}
@@ -22,10 +43,24 @@ export default function AboutPage() {
             {/* プロフィール画像 */}
             <div className="lg:col-span-1">
               <div className="card-base p-6 text-center">
-                <div className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
-                  <User size={48} className="text-gray-400" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">管理者</h3>
+                {loading ? (
+                  <div className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : (
+                  <div className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                    {profileImage ? (
+                      <img 
+                        src={profileImage} 
+                        alt="プロフィール画像" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User size={48} className="text-gray-400" />
+                    )}
+                  </div>
+                )}
+                <h3 className="text-xl font-semibold mb-2">管理者：{adminName}</h3>
                 <p className="text-gray-600 text-sm">
                   思考の整理と言葉の力を信じて
                 </p>

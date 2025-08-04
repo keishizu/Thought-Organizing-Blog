@@ -1,31 +1,130 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Lock } from 'lucide-react';
 import Button from '@/components/common/Button';
 
 interface PostInteractionsProps {
   initialLikes: number;
+  postId: string;
   allowComments?: boolean;
   allowLikes?: boolean;
 }
 
+// 匿名ユーザーIDを生成する関数
+function generateAnonymousUserId(): string {
+  // ブラウザ環境でのみsessionStorageを使用
+  if (typeof window !== 'undefined') {
+    let anonymousUserId = sessionStorage.getItem('anonymous_user_id');
+    
+    if (!anonymousUserId) {
+      anonymousUserId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+      sessionStorage.setItem('anonymous_user_id', anonymousUserId);
+    }
+    
+    return anonymousUserId;
+  }
+  
+  // サーバーサイドの場合は一時的なIDを生成
+  return `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
 export default function PostInteractions({ 
   initialLikes, 
+  postId,
   allowComments = true, 
   allowLikes = true 
 }: PostInteractionsProps) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [comment, setComment] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [anonymousUserId, setAnonymousUserId] = useState<string>('');
 
-  const handleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
+  // クライアントサイドでのみanonymousUserIdを設定
+  useEffect(() => {
+    setAnonymousUserId(generateAnonymousUserId());
+  }, []);
+
+  // 初期状態でいいね状態を確認
+  useEffect(() => {
+    if (!anonymousUserId) return;
+
+    const checkLikeStatus = async () => {
+      try {
+        const response = await fetch(`/api/likes?postId=${postId}&userId=${anonymousUserId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setLiked(data.isLiked);
+        }
+      } catch (error) {
+        console.error("Error checking like status:", error);
+      }
+    };
+
+    checkLikeStatus();
+  }, [postId, anonymousUserId]);
+
+  const handleLike = async () => {
+    if (isLoading || !anonymousUserId) return;
+    
+    setIsLoading(true);
+    
+    try {
+      if (liked) {
+        // いいねを削除
+        const response = await fetch("/api/likes", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId, userId: anonymousUserId }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setLiked(false);
+          // サーバーから最新のカウントを取得
+          if (result.updatedLikeCount !== undefined) {
+            setLikeCount(result.updatedLikeCount);
+          } else {
+            setLikeCount(prev => Math.max(prev - 1, 0));
+          }
+        } else {
+          console.error("Failed to remove like");
+        }
+      } else {
+        // いいねを追加
+        const response = await fetch("/api/likes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId, userId: anonymousUserId }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setLiked(true);
+          // サーバーから最新のカウントを取得
+          if (result.updatedLikeCount !== undefined) {
+            setLikeCount(result.updatedLikeCount);
+          } else {
+            setLikeCount(prev => prev + 1);
+          }
+        } else {
+          console.error("Failed to add like");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setLiked(!liked);
   };
 
   const handleCommentSubmit = (e: React.FormEvent) => {
@@ -46,8 +145,16 @@ export default function PostInteractions({
               onClick={handleLike}
               variant={liked ? 'primary' : 'secondary'}
               className="flex items-center space-x-2"
+              disabled={isLoading || !anonymousUserId}
             >
-              <Heart size={16} className={liked ? 'fill-current' : ''} />
+              <Heart 
+                size={16} 
+                className={`transition-all duration-300 ${
+                  liked 
+                    ? "fill-current" 
+                    : ""
+                }`} 
+              />
               <span>{likeCount}</span>
             </Button>
           </div>

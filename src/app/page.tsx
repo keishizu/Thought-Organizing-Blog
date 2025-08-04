@@ -88,7 +88,6 @@ export default async function Home() {
                   excerpt={article.excerpt}
                   category={article.category}
                   date={article.date}
-                  author={article.author}
                   imageUrl={article.imageUrl}
                   likes={article.likes}
                   readTime={article.readTime}
@@ -117,7 +116,6 @@ export default async function Home() {
                 excerpt={article.excerpt}
                 category={article.category}
                 date={article.date}
-                author={article.author}
                 imageUrl={article.imageUrl}
                 likes={article.likes}
                 readTime={article.readTime}

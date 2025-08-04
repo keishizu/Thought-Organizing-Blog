@@ -45,7 +45,6 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
     category: params.category || 'エッセイ',
     tags: params.tags ? JSON.parse(params.tags) : [],
     imageUrl: params.imageUrl || undefined,
-    author: user.user_metadata?.full_name || '管理者',
     date: new Date().toLocaleDateString('ja-JP', {
       year: 'numeric',
       month: 'long',

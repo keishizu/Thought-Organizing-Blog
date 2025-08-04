@@ -46,10 +46,39 @@ export type Database = {
           },
         ]
       }
+      likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
-          allow_comments: boolean | null
-          allow_likes: boolean | null
+          allow_comments: boolean
+          allow_likes: boolean
           author_id: string
           category: string
           content: string
@@ -57,15 +86,16 @@ export type Database = {
           excerpt: string
           id: string
           image_url: string | null
+          is_recommended: boolean | null
           likes: number
-          status: string | null
+          status: string
           tags: string[]
           title: string
           updated_at: string | null
         }
         Insert: {
-          allow_comments?: boolean | null
-          allow_likes?: boolean | null
+          allow_comments?: boolean
+          allow_likes?: boolean
           author_id: string
           category: string
           content: string
@@ -73,15 +103,16 @@ export type Database = {
           excerpt: string
           id?: string
           image_url?: string | null
+          is_recommended?: boolean | null
           likes?: number
-          status?: string | null
+          status?: string
           tags?: string[]
           title: string
           updated_at?: string | null
         }
         Update: {
-          allow_comments?: boolean | null
-          allow_likes?: boolean | null
+          allow_comments?: boolean
+          allow_likes?: boolean
           author_id?: string
           category?: string
           content?: string
@@ -89,8 +120,9 @@ export type Database = {
           excerpt?: string
           id?: string
           image_url?: string | null
+          is_recommended?: boolean | null
           likes?: number
-          status?: string | null
+          status?: string
           tags?: string[]
           title?: string
           updated_at?: string | null
@@ -140,11 +172,11 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-          Row: infer R
-        }
-        ? R
-        : never
+        Row: infer R
+      }
+      ? R
       : never
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
@@ -227,7 +259,7 @@ export type CompositeTypes<
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? PublicCompositeTypeNameOrOptions
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {

@@ -249,8 +249,18 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
       .eq('status', 'published')
       .single();
 
-    if (error || !data) {
-      console.error('記事取得エラー:', error);
+    if (error) {
+      console.error('記事取得エラー:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
+      return null;
+    }
+
+    if (!data) {
+      console.error('記事が見つかりません:', id);
       return null;
     }
 
@@ -275,7 +285,12 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
       allowLikes: post.allow_likes ?? true,
     };
   } catch (error) {
-    console.error('記事取得エラー:', error);
+    console.error('記事取得エラー:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.stack : String(error),
+      hint: 'Supabaseクライアントの初期化またはネットワーク接続に問題がある可能性があります',
+      code: ''
+    });
     return null;
   }
 }

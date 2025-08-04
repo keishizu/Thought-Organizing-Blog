@@ -177,12 +177,14 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>アカウント管理</h3>
-                  <p className="text-base text-gray-600">パスワード変更などのアカウント設定</p>
+                  <p className="text-base text-gray-600">管理者名やプロフィール画像の設定</p>
                 </div>
               </div>
-              <Button variant="outline" className="w-full text-lg py-4" disabled>
-                アカウント設定
-              </Button>
+              <Link href="/admin/account">
+                <Button className="btn-primary w-full text-lg py-4">
+                  アカウント設定
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
