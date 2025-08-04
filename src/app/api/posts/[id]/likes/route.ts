@@ -4,10 +4,10 @@ import { createServerSupabaseClient } from '@/lib/supabase-server';
 // GET: 投稿のいいね数を取得
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const postId = params.id;
+    const { id: postId } = await params;
     
     if (!postId) {
       return NextResponse.json(
