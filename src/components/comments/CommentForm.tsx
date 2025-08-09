@@ -82,7 +82,7 @@ export default function CommentForm({ postId, userId, onCommentAdded }: CommentF
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="この記事について感じたことをお聞かせください..."
+            placeholder="この図書について感じたことをお聞かせください..."
             className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 resize-none text-gray-700 placeholder-gray-400"
             rows={4}
             disabled={isSubmitting}

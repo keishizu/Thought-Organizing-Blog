@@ -29,9 +29,9 @@ export default async function NewPostPage() {
               <span>ダッシュボードに戻る</span>
             </Link>
             <div className="w-full">
-              <h1 className="page-title">新規記事投稿</h1>
+              <h1 className="page-title">新規図書投稿</h1>
               <p className="page-subtitle">
-                静かな図書室に新しい物語を紡ぎましょう
+                思整図書館に新しい物語を紡ぎましょう
               </p>
             </div>
           </div>

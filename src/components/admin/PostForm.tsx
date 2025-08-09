@@ -73,7 +73,7 @@ export default function PostForm({
     initialValues?.status
   ])
 
-  // おすすめ記事件数チェック
+  // おすすめ図書件数チェック
   const checkRecommendedCount = async (): Promise<boolean> => {
     try {
       const { count, error } = await supabase
@@ -82,26 +82,26 @@ export default function PostForm({
         .eq('is_recommended', true)
 
       if (error) {
-        console.error('おすすめ記事件数取得エラー:', error)
+        console.error('おすすめ図書件数取得エラー:', error)
         return false
       }
 
       return (count || 0) < 3
     } catch (error) {
-      console.error('おすすめ記事件数チェックエラー:', error)
+      console.error('おすすめ図書件数チェックエラー:', error)
       return false
     }
   }
 
-  // おすすめ記事トグル処理
+  // おすすめ図書トグル処理
   const handleRecommendedToggle = async (checked: boolean) => {
     if (checked) {
-      // おすすめ記事を追加する場合、件数チェック
+      // おすすめ図書を追加する場合、件数チェック
       const canAdd = await checkRecommendedCount()
       if (!canAdd) {
         toast({
           title: "制限エラー",
-          description: "おすすめ記事は最大3件までです。",
+          description: "おすすめ図書は最大3件までです。",
           variant: "destructive"
         })
         return
@@ -320,7 +320,7 @@ export default function PostForm({
           id="title"
           value={formData.title}
           onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-          placeholder="記事のタイトルを入力してください"
+          placeholder="図書のタイトルを入力してください"
           maxLength={10}
           className="text-lg"
         />
@@ -346,7 +346,7 @@ export default function PostForm({
           id="subtitle"
           value={formData.subtitle}
           onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
-          placeholder="記事のサブタイトルを入力してください（任意）"
+          placeholder="図書のサブタイトルを入力してください（任意）"
           maxLength={60}
         />
         {errors.subtitle && (
@@ -463,7 +463,7 @@ export default function PostForm({
         <TipTapEditor
           content={formData.content}
           onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-          placeholder="記事の本文を入力してください..."
+          placeholder="図書の本文を入力してください..."
         />
         {errors.content && (
           <p className="text-sm text-red-600">{errors.content}</p>
@@ -484,14 +484,14 @@ export default function PostForm({
           <h3 className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>設定</h3>
         </div>
         
-        {/* おすすめ記事設定 */}
+        {/* おすすめ図書設定 */}
         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
               <Star className="w-4 h-4 text-yellow-600" />
             </div>
             <div className="space-y-0.5">
-              <Label>おすすめ記事に設定</Label>
+              <Label>おすすめ図書に設定</Label>
               <p className="text-sm text-gray-500">
                 トップページのおすすめ欄に表示されます（最大3件まで）
               </p>
@@ -532,7 +532,7 @@ export default function PostForm({
             <div className="space-y-0.5">
               <Label>コメントを許可</Label>
               <p className="text-sm text-gray-500">
-                読者が記事にコメントを投稿できるようにします
+                読者が図書にコメントを投稿できるようにします
               </p>
             </div>
           </div>
@@ -571,7 +571,7 @@ export default function PostForm({
             <div className="space-y-0.5">
               <Label>いいねを許可</Label>
               <p className="text-sm text-gray-500">
-                読者が記事にいいねを送れるようにします
+                読者が図書にいいねを送れるようにします
               </p>
             </div>
           </div>
@@ -631,7 +631,7 @@ export default function PostForm({
           className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send className="w-4 h-4" />
-          <span>{isLoading ? (isEdit ? '更新中...' : '投稿中...') : (isEdit ? '記事を更新する' : '記事を投稿する')}</span>
+          <span>{isLoading ? (isEdit ? '更新中...' : '投稿中...') : (isEdit ? '図書を更新する' : '図書を投稿する')}</span>
         </button>
       </div>
     </div>

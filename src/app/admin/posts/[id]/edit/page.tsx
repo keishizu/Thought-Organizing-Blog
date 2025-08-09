@@ -22,7 +22,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
     redirect("/login")
   }
 
-  // 記事データを取得
+  // 図書データを取得
   const { data: post, error } = await supabase
     .from('posts')
     .select('*')
@@ -33,7 +33,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
     redirect("/admin/posts")
   }
 
-  // 記事の所有者チェック
+  // 図書の所有者チェック
   if (post.author_id !== user.id) {
     redirect("/admin/posts")
   }
@@ -49,12 +49,12 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-4 self-start"
             >
               <ArrowLeft size={15} />
-              <span>記事一覧に戻る</span>
+              <span>図書一覧に戻る</span>
             </Link>
             <div className="w-full">
-              <h1 className="page-title">記事編集</h1>
+              <h1 className="page-title">図書編集</h1>
               <p className="page-subtitle">
-                記事の内容を編集しましょう
+                図書の内容を編集しましょう
               </p>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-gray-900">記事を編集</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">図書を編集</h2>
                   <p className="text-gray-600">読者に届けたい想いを形にしましょう</p>
                 </div>
               </div>

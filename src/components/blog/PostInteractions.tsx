@@ -166,7 +166,7 @@ export default function PostInteractions({
         <div className="card-base p-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
             <MessageCircle size={20} className="mr-2" />
-            この記事について
+            この図書について
           </h3>
           <p className="text-gray-600 mb-4">
             ご感想やご意見があれば、お気軽にコメントしてください。
@@ -181,7 +181,7 @@ export default function PostInteractions({
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 className="form-textarea"
-                placeholder="この記事について感じたことをお聞かせください..."
+                placeholder="この図書について感じたことをお聞かせください..."
                 required
               />
             </div>
@@ -199,12 +199,12 @@ export default function PostInteractions({
             <div>
               <h3 className="text-lg font-semibold text-gray-700">コメントは無効化されています</h3>
               <p className="text-sm text-gray-600">
-                この記事ではコメント機能が無効になっています
+                この図書ではコメント機能が無効になっています
               </p>
             </div>
           </div>
           <p className="text-gray-600 text-sm">
-            記事の内容についてご質問やご感想がございましたら、お気軽にお問い合わせください。
+            図書の内容についてご質問やご感想がございましたら、お気軽にお問い合わせください。
           </p>
         </div>
       )}

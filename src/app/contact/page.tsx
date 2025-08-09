@@ -62,9 +62,9 @@ export default function ContactPage() {
       <section className="page-header">
         <div className="container-custom">
           <h1 className="page-title">お問い合わせ</h1>
-          <p className="page-subtitle">
+          {/* <p className="page-subtitle">
             ご質問、ご感想、ご提案など、お気軽にお声がけください。
-          </p>
+          </p> */}
         </div>
       </section>
 
@@ -78,7 +78,7 @@ export default function ContactPage() {
             </div>
             
             <p className="text-gray-600 mb-8 leading-relaxed">
-              記事へのご感想、サイトへのご意見、ご質問など、どんなことでもお気軽にお聞かせください。
+              図書へのご感想、サイトへのご意見、ご質問など、どんなことでもお気軽にお聞かせください。
               いただいたメッセージには、必ずお返事いたします。
             </p>
 
@@ -127,7 +127,7 @@ export default function ContactPage() {
                   className="form-input"
                 >
                   <option value="">件名を選択してください</option>
-                  <option value="記事への感想">記事への感想</option>
+                  <option value="図書への感想">図書への感想</option>
                   <option value="サイトについて">サイトについて</option>
                   <option value="ご質問">ご質問</option>
                   <option value="ご提案">ご提案</option>

@@ -14,7 +14,7 @@ alwaysApply: true
 src/
 ├── app/                    # ルーティングとページコンポーネント
 │   ├── (marketing)/       # ランディングページ、プライシング、お問い合わせなど
-│   │   ├── about/
+│   │   ├── プロフィール/
 │   │   ├── pricing/
 │   │   └── contact/
 │   ├── (dashboard)/       # ログイン後のメイン機能
@@ -107,7 +107,7 @@ src/
 // app/api/articles/route.ts
 import { NextResponse } from "next/server";
 
-// POST: 新規記事の作成
+// POST: 新規図書の作成
 export async function POST(request: Request) {
   try {
     const data = await request.json();

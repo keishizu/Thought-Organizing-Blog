@@ -182,7 +182,7 @@ export default function AccountPage() {
             <div className="w-full">
               <h1 className="page-title">アカウント管理</h1>
               <p className="page-subtitle">
-                静かな図書室の管理者設定
+                思整図書館の管理者設定
               </p>
             </div>
           </div>

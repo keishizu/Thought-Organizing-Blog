@@ -29,10 +29,7 @@ export default function AboutPage() {
       {/* ページヘッダー */}
       <section className="page-header">
         <div className="container-custom">
-          <h1 className="page-title">About</h1>
-          <p className="page-subtitle">
-            このサイトを運営している私について、少しお話しさせてください。
-          </p>
+          <h1 className="page-title">思整図書館とは</h1>
         </div>
       </section>
 
@@ -61,9 +58,6 @@ export default function AboutPage() {
                   </div>
                 )}
                 <h3 className="text-xl font-semibold mb-2">管理者：{adminName}</h3>
-                <p className="text-gray-600 text-sm">
-                  思考の整理と言葉の力を信じて
-                </p>
               </div>
             </div>
 
@@ -76,37 +70,42 @@ export default function AboutPage() {
                 </h2>
                 <div className="prose prose-lg text-gray-700 leading-relaxed space-y-4">
                   <p>
-                    こんにちは。この「静かな図書室」を運営しています。
+                    こんにちは。この「思整図書館」を管理・運営をしている{adminName}と申します。
                   </p>
                   <p>
-                    普段は会社員として働きながら、日々感じる小さな気づきや内省を言葉にして、このサイトに綴っています。
-                    完璧ではない日常の中で見つけた、ささやかな発見や学びを、静かに共有する場所でありたいと思っています。
+                    ここは、心のモヤモヤや迷いを少しずつ言葉に変え、思考を整える場所です。
+                    日々感じる小さな気づきや内省を言葉にして、ここに綴っています。
                   </p>
                   <p>
-                    人生には正解がないからこそ、立ち止まって考える時間が大切だと感じています。
-                    忙しい毎日の中で、少しでも自分の思考を整理したり、新しい視点を得るきっかけになれば嬉しいです。
+                    慌ただしい毎日の中で、自分と向き合える“もうひとつの居場所”を目指しているので、
+                    良ければ少し立ち止まり、一緒に思考を整える時間を作ってみませんか？
                   </p>
+              
                 </div>
               </div>
 
               <div>
                 <h2 className="text-2xl font-semibold mb-4 flex items-center">
                   <BookOpen className="mr-2 text-primary" size={24} />
-                  このサイトを始めた理由
+                  この図書館を創ったキッカケ
                 </h2>
                 <div className="prose prose-lg text-gray-700 leading-relaxed space-y-4">
                   <p>
-                    社会人になってから、自分の感情や考えを言葉にする機会が減っていることに気づきました。
-                    忙しい日々の中で、立ち止まって考える時間を意識的に作ることの大切さを実感し、それを記録として残したいと思ったのがきっかけです。
+                  社会人になってから、知らず知らずのうちに自分の感情や考えを言葉にする機会が減っていました。
+                  気づけば、頭の中に表現のしようがない“思考のゴミ”が散らばり、言葉にするのこと自体が面倒に......
+                  そして、次第に考えることさえ放棄していました。
+                  </p>
+                  <p>  
+                  そんなとき、ふと「このままではいけない」と思い、  
+                  忙しい日々の中であえて立ち止まり、ゆっくり考え、
+                  それを記録として残そうと決めました。  
                   </p>
                   <p>
-                    また、同じように日々の中で感じるモヤモヤや迷いを抱えている人たちと、
-                    静かに思いを共有できる場所があればいいなという想いもありました。
+                    また、同じようなモヤモヤや迷いを抱えている人たちと、
+                    せわしない日常の中で見つけた、ささやかな発見や学びを
+                    共有できる場所があれば——。そういった想いから、この図書館を立ち上げました。
                   </p>
-                  <p>
-                    このサイトが、読んでくださる方の思考を整理したり、
-                    新しい気づきを得るための小さなきっかけになれば、それ以上の喜びはありません。
-                  </p>
+                  
                 </div>
               </div>
 
@@ -154,8 +153,8 @@ export default function AboutPage() {
             ご感想やご質問など、お気軽にお声がけください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/" className="btn-primary">
-              記事を読む
+            <a href="/articles" className="btn-primary">
+              図書を読む
             </a>
             <a href="/contact" className="btn-secondary">
               お問い合わせ

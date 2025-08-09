@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Book, Mail, Twitter, Github } from 'lucide-react';
+import Image from 'next/image';
+import { Mail } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +14,7 @@ export default function Footer() {
       { name: '気づきと日常', href: '/categories/insights-daily' },
     ],
     pages: [
-      { name: 'About', href: '/about' },
+      { name: '思整図書館とは', href: '/about' },
       { name: 'お問い合わせ', href: '/contact' },
       { name: 'プライバシーポリシー', href: '/privacy' },
       { name: '管理者ページ', href: '/admin' },
@@ -31,14 +32,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* ブランド情報 */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <Book size={24} className="text-primary" />
-              <span className="nav-logo">静かな図書室</span>
+            <div className="flex items-center space-x-2 mb-1">
+              <Image
+                src="/logo/logo2.svg"
+                alt="思整図書館"
+                width={300}
+                height={180}
+                className="h-24 sm:h-28 w-auto"
+                priority={false}
+              />
             </div>
-            <p className="text-gray-600 mb-4">
-              思考を言葉に、前へ進むヒントを。<br />
-              悩みやモヤモヤを整理するための、静かな図書室です。
-            </p>
+            {/* <p className="text-gray-600 mb-4">
+              思考を整え、次の一歩へ。<br />
+              悩みやモヤモヤを整理するための、思整図書館です。
+            </p> */}
             <div className="flex space-x-4">
               {footerLinks.social.map((item) => {
                 const Icon = item.icon;
@@ -88,7 +95,7 @@ export default function Footer() {
         {/* コピーライト */}
         <div className="pt-8 border-t border-gray-200 text-center">
           <p className="text-gray-600">
-            © {currentYear} 静かな図書室. All rights reserved.
+            © {currentYear} 思整図書館. All rights reserved.
           </p>
         </div>
       </div>

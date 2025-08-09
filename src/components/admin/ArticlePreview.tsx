@@ -23,7 +23,7 @@ interface ArticlePreviewProps {
 export default function ArticlePreview({ article }: ArticlePreviewProps) {
   return (
     <div>
-      {/* 記事ヘッダー */}
+      {/* 図書ヘッダー */}
       <article className="container-custom max-w-4xl">
         <header className="mb-8">
           {article.imageUrl && (
@@ -68,7 +68,7 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
           )}
         </header>
 
-        {/* 記事本文 */}
+        {/* 図書本文 */}
         <div className="prose prose-lg max-w-none mb-12">
           <div className="text-gray-700 leading-relaxed space-y-6">
             <p className="text-lg font-medium text-gray-800 leading-relaxed">
@@ -104,7 +104,7 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
                 このサイトが読者の皆さんにとって、新しい視点を得るきっかけになれば嬉しいです。
               </p>
               <Link href="/about" className="text-primary hover:underline text-sm mt-2 inline-block">
-                プロフィールを見る
+                思整図書館について
               </Link>
             </div>
           </div>

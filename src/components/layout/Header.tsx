@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Book, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,8 +30,8 @@ export default function Header() {
 
   const navItems = [
     { name: 'ホーム', href: '/' },
-    { name: '記事一覧', href: '/articles' },
-    { name: 'About', href: '/about' },
+    { name: '図書一覧', href: '/articles' },
+    { name: '思整図書館とは', href: '/about' },
     { name: 'お問い合わせ', href: '/contact' },
   ];
 
@@ -44,9 +45,15 @@ export default function Header() {
     <header className={`nav-header ${scrolled ? 'shadow-md' : ''}`}>
       <div className="nav-container">
         <div className="flex items-center">
-          <Link href="/" className="nav-logo flex items-center space-x-2">
-            <Book size={24} />
-            <span>静かな図書室</span>
+          <Link href="/" className="nav-logo flex items-center">
+            <Image
+              src="/logo/logo2.svg"
+              alt="思整図書館"
+              width={300}
+              height={180}
+              className="h-24 sm:h-28 w-auto"
+              priority
+            />
           </Link>
         </div>
 

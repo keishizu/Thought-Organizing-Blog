@@ -18,7 +18,7 @@ export default async function PostPage({ params }: PostPageProps) {
     const article = await getPublishedArticleById(slug);
     
     if (!article) {
-      console.error(`記事が見つかりません: ${slug}`);
+      console.error(`図書が見つかりません: ${slug}`);
       notFound();
     }
 
@@ -33,11 +33,11 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="container-custom py-4">
           <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
             <ArrowLeft size={20} className="mr-2" />
-            記事一覧に戻る
+            図書一覧に戻る
           </Link>
         </div>
 
-        {/* 記事ヘッダー */}
+        {/* 図書ヘッダー */}
         <article className="container-custom max-w-4xl">
           <header className="mb-8">
             {article.imageUrl && (
@@ -80,7 +80,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           </header>
 
-          {/* 記事本文 */}
+          {/* 図書本文 */}
           <div className="prose prose-lg max-w-none mb-12">
             <div className="text-gray-700 leading-relaxed space-y-6">
               {article.content && (
@@ -123,10 +123,10 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           </div> */}
           
-          {/* 関連記事 */}
+          {/* 関連図書 */}
           {relatedArticles.length > 0 && (
             <div className="mb-12">
-              <h2 className="text-2xl font-semibold mb-6">関連記事</h2>
+              <h2 className="text-2xl font-semibold mb-6">関連図書</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedArticles.map((relatedArticle) => (
                   <ArticleCard
@@ -148,7 +148,7 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
     );
   } catch (error) {
-    console.error('記事ページエラー:', error);
+    console.error('図書ページエラー:', error);
     notFound();
   }
 } 

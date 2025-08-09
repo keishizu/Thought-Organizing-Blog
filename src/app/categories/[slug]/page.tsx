@@ -45,11 +45,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <div className="container-custom py-4">
         <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
           <ArrowLeft size={20} className="mr-2" />
-          記事一覧に戻る
+          図書一覧に戻る
         </Link>
       </div>
 
-      {/* 記事一覧 */}
+      {/* 図書一覧 */}
       <section className="section-padding">
         <div className="container-custom">
           {articles.length > 0 ? (
@@ -73,17 +73,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               {/* ページネーション（将来的に実装） */}
               <div className="mt-12 text-center">
                 <p className="text-gray-600">
-                  現在 {articles.length} 件の記事があります
+                  現在 {articles.length} 件の図書があります
                 </p>
               </div>
             </>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">
-                このカテゴリーにはまだ記事がありません。
+                このカテゴリーにはまだ図書がありません。
               </p>
               <p className="text-gray-500 mt-2">
-                新しい記事をお楽しみに。
+                新しい図書をお楽しみに。
               </p>
             </div>
           )}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +18,7 @@
   
   /* フォント設定 */
   --font-primary: 'Noto Sans JP', sans-serif;
-  --font-secondary: 'Shippori Mincho', serif;
+  --font-secondary: 'Noto Serif JP', serif;
   
   /* スペーシング */
   --spacing-xs: 0.5rem;
@@ -45,7 +45,8 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-secondary);
     color: var(--color-text-primary);
-    line-height: 1.4;
+    line-height: 1.5;
+    font-weight: 600;
   }
 }
 
@@ -168,7 +169,7 @@
   }
   
   .nav-logo {
-    @apply text-xl font-bold;
+    @apply text-xl font-semibold;
     color: var(--color-primary);
     font-family: var(--font-secondary);
   }
@@ -273,7 +274,7 @@
   }
   
   .hero-title {
-    @apply text-4xl lg:text-5xl font-bold mb-6;
+    @apply text-4xl lg:text-5xl font-semibold mb-6;
     color: var(--color-text-primary);
     font-family: var(--font-secondary);
   }

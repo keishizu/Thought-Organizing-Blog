@@ -72,7 +72,7 @@ export default function AdminPage() {
             <div>
               <h1 className="page-title">管理者ダッシュボード</h1>
               <p className="page-subtitle">
-                静かな図書室の管理画面へようこそ
+                思整図書館の管理画面へようこそ
               </p>
             </div>
             <Button
@@ -88,7 +88,7 @@ export default function AdminPage() {
       </section>
 
       {/* 管理者情報セクション */}
-      <section className="section-padding">
+      {/* <section className="section-padding">
         <div className="container-custom max-w-4xl">
           <div className="card-base p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
@@ -114,8 +114,12 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section> */}
 
-          {/* 管理機能カード群（見出し削除済み） */}
+      {/* 管理機能カード群（見出し削除済み） */}
+      <section className="section-padding">
+        <div className="container-custom max-w-4xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* カード1 */}
             <div className="card-base card-hover p-10 min-h-[220px] flex flex-col justify-between">
@@ -124,13 +128,13 @@ export default function AdminPage() {
                   <Plus size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>新規記事投稿</h3>
-                  <p className="text-base text-gray-600">新しい記事を作成して投稿します</p>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>新規図書投稿</h3>
+                  <p className="text-base text-gray-600">新しい図書を作成して投稿します</p>
                 </div>
               </div>
               <Link href="/admin/posts/new">
                 <Button className="btn-primary w-full text-lg py-4">
-                  記事を投稿する
+                  図書を投稿する
                 </Button>
               </Link>
             </div>
@@ -142,13 +146,13 @@ export default function AdminPage() {
                   <FileText size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>記事管理</h3>
-                  <p className="text-base text-gray-600">既存の記事を編集・削除します</p>
+                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>図書管理</h3>
+                  <p className="text-base text-gray-600">既存の図書を編集・削除します</p>
                 </div>
               </div>
               <Link href="/admin/posts">
                 <Button className="btn-primary w-full text-lg py-4">
-                  記事一覧を表示
+                  図書一覧を表示
                 </Button>
               </Link>
             </div>
@@ -177,7 +181,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>アカウント管理</h3>
-                  <p className="text-base text-gray-600">管理者名やプロフィール画像の設定</p>
+                  <p className="text-base text-gray-600">管理者名やプロフ画像の設定</p>
                 </div>
               </div>
               <Link href="/admin/account">

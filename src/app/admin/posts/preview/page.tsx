@@ -68,7 +68,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft size={15} />
-                <span>記事一覧に戻る</span>
+                <span>図書一覧に戻る</span>
               </Link>
               <div className="h-4 w-px bg-gray-300"></div>
               <span className="text-sm font-medium text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full">
@@ -84,7 +84,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
         </div>
       </div>
 
-      {/* 記事プレビュー */}
+      {/* 図書プレビュー */}
       <ArticlePreview article={previewData} />
     </div>
   )

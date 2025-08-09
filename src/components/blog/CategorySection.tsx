@@ -22,7 +22,7 @@ export default function CategorySection({ title, description, href, icon }: Cate
         {description}
       </p>
       <Link href={href} className="btn-secondary inline-block">
-        記事を読む
+        図書を読む
       </Link>
     </div>
   );

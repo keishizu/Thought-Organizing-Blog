@@ -61,10 +61,10 @@ export default function PostsList() {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('記事取得エラー:', error)
+        console.error('図書取得エラー:', error)
         toast({
           title: "エラー",
-          description: "記事の取得に失敗しました。",
+          description: "図書の取得に失敗しました。",
           variant: "destructive"
         })
         return
@@ -90,10 +90,10 @@ export default function PostsList() {
 
       setPosts(typedPosts)
     } catch (error) {
-      console.error('記事取得エラー:', error)
+      console.error('図書取得エラー:', error)
       toast({
         title: "エラー",
-        description: "記事の取得中にエラーが発生しました。",
+        description: "図書の取得中にエラーが発生しました。",
         variant: "destructive"
       })
     } finally {
@@ -116,14 +116,14 @@ export default function PostsList() {
   }
 
   const handleDelete = async (postId: string) => {
-    if (!confirm('この記事を削除しますか？この操作は取り消せません。')) {
+    if (!confirm('この図書を削除しますか？この操作は取り消せません。')) {
       return
     }
 
     setDeletingId(postId)
     
     try {
-      // 削除前に記事の画像URLを取得
+      // 削除前に図書の画像URLを取得
       const { data: post, error: fetchError } = await supabase
         .from('posts')
         .select('image_url')
@@ -131,11 +131,11 @@ export default function PostsList() {
         .single()
 
       if (fetchError) {
-        console.error('記事取得エラー:', fetchError)
+        console.error('図書取得エラー:', fetchError)
         throw new Error(fetchError.message)
       }
 
-      // 記事を削除
+      // 図書を削除
       const { error } = await supabase
         .from('posts')
         .delete()
@@ -169,10 +169,10 @@ export default function PostsList() {
 
       toast({
         title: "削除完了",
-        description: "記事が正常に削除されました。",
+        description: "図書が正常に削除されました。",
       })
 
-      // 記事一覧を再取得
+      // 図書一覧を再取得
       fetchPosts()
       
     } catch (error) {
@@ -229,7 +229,7 @@ export default function PostsList() {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">記事を読み込み中...</span>
+        <span className="ml-2">図書を読み込み中...</span>
       </div>
     )
   }
@@ -241,18 +241,18 @@ export default function PostsList() {
         <Link href="/admin/posts/new">
           <button className="btn-primary flex items-center gap-2">
             <Plus size={16} />
-            新規記事投稿
+            新規図書投稿
           </button>
         </Link>
       </div>
 
-      {/* 記事一覧 */}
+      {/* 図書一覧 */}
       {posts.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-gray-500 mb-4">まだ記事が投稿されていません</p>
+            <p className="text-gray-500 mb-4">まだ図書が投稿されていません</p>
             <Link href="/admin/posts/new">
-              <Button>最初の記事を投稿する</Button>
+              <Button>最初の図書を投稿する</Button>
             </Link>
           </CardContent>
         </Card>
@@ -261,7 +261,7 @@ export default function PostsList() {
           {posts.map((post) => (
             <div key={post.id} className="article-card card-hover">
               <div className="flex items-start gap-6">
-                {/* 記事情報 */}
+                {/* 図書情報 */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
@@ -348,7 +348,7 @@ export default function PostsList() {
                   <button
                     onClick={() => router.push(`/admin/posts/${post.id}/edit`)}
                     className="btn-ghost p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                    title="記事を編集"
+                    title="図書を編集"
                   >
                     <Edit size={16} />
                   </button>
@@ -356,7 +356,7 @@ export default function PostsList() {
                     onClick={() => handleDelete(post.id)}
                     disabled={deletingId === post.id}
                     className="btn-ghost p-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50"
-                    title="記事を削除"
+                    title="図書を削除"
                   >
                     {deletingId === post.id ? (
                       <Loader2 size={16} className="animate-spin" />

@@ -39,18 +39,19 @@ export default async function Home() {
       <section className="hero-section">
         <div className="container-custom">
           <h1 className="hero-title text-balance mb-8">
-            思考を言葉に、前へ進むヒントを。
+          思考を整え、次の一歩へ。
           </h1>
           <p className="hero-subtitle mb-12">
-            悩みやモヤモヤを整理するための、静かな図書室です。<br />
-            日々の気づきや内省を通じて、あなたの思考を言葉にするお手伝いをします。
+          心にかかったモヤや迷いを<br />
+          少しずつ言葉に変え、思考を整える。<br />
+          あなたが前へ進むためのヒントを、そっとお届けします。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/about" className="btn-primary">
-              このサイトについて
+             思整図書館とは
             </Link>
-            <Link href="#recent-articles" className="btn-secondary">
-              記事を読む
+            <Link href="/articles" className="btn-secondary">
+             図書を覗く
             </Link>
           </div>
         </div>
@@ -74,11 +75,11 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* おすすめ記事セクション */}
+      {/* おすすめ図書セクション */}
       {recommendedArticles.length > 0 && (
         <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%)'}}>
           <div className="container-custom">
-            <h2 className="section-title">おすすめの記事</h2>
+            <h2 className="section-title">おすすめの図書</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {recommendedArticles.map((article) => (
                 <ArticleCard
@@ -96,17 +97,17 @@ export default async function Home() {
             </div>
             <div className="text-center">
               <Link href="/articles" className="btn-secondary">
-                すべての記事を見る
+                すべての図書を見る
               </Link>
             </div>
           </div>
         </section>
       )}
 
-      {/* 新着記事セクション */}
+      {/* 新着図書セクション */}
       <section id="recent-articles" className="section-padding">
         <div className="container-custom">
-          <h2 className="section-title">新着記事</h2>
+          <h2 className="section-title">新着図書</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
             {recentArticles.map((article) => (
               <ArticleCard
@@ -124,7 +125,7 @@ export default async function Home() {
           </div>
           <div className="text-center">
             <Link href="/articles" className="btn-secondary">
-              新着記事をもっと見る
+              新着図書をもっと見る
             </Link>
           </div>
         </div>

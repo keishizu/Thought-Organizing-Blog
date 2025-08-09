@@ -15,7 +15,7 @@ export interface Article {
   allowLikes?: boolean;
 }
 
-// データベースから取得した記事の型
+// データベースから取得した図書の型
 export interface DatabaseArticle {
   id: string;
   title: string;
@@ -39,7 +39,7 @@ export const sampleArticles: Article[] = [
     id: 'finding-your-path',
     title: '迷子になることの価値 - 人生に正解はないという気づき',
     excerpt: '完璧な道筋を描こうとして立ち止まってしまうことがあります。でも、迷うことそのものが、実は最も大切な学びの時間なのかもしれません。',
-    content: '記事の本文がここに入ります...',
+    content: '図書の本文がここに入ります...',
     category: '思考と行動',
     date: '2024年3月15日',
     author: '管理者',
@@ -52,7 +52,7 @@ export const sampleArticles: Article[] = [
     id: 'career-transition',
     title: 'キャリアチェンジという冒険 - 30代で歩む新しい道',
     excerpt: '安定した仕事を手放すことへの不安。それでも新しい挑戦を選んだ理由と、その過程で学んだことを振り返ります。',
-    content: '記事の本文がここに入ります...',
+    content: '図書の本文がここに入ります...',
     category: 'キャリアと選択',
     date: '2024年3月12日',
     author: '管理者',
@@ -65,7 +65,7 @@ export const sampleArticles: Article[] = [
     id: 'morning-ritual',
     title: '朝のコーヒーが教えてくれること - 日常の小さな豊かさ',
     excerpt: '毎朝同じように淹れるコーヒー。その儀式的な時間が、実は一日の質を決めている気がします。小さな習慣の持つ力について。',
-    content: '記事の本文がここに入ります...',
+    content: '図書の本文がここに入ります...',
     category: '気づきと日常',
     date: '2024年3月10日',
     author: '管理者',
@@ -78,7 +78,7 @@ export const sampleArticles: Article[] = [
     id: 'silence-value',
     title: '沈黙の価値 - 言葉にしないことの美しさ',
     excerpt: '何でも言葉にしようとする現代。でも、沈黙にも深い意味があることを、最近よく考えます。',
-    content: '記事の本文がここに入ります...',
+    content: '図書の本文がここに入ります...',
     category: '思考と行動',
     date: '2024年3月8日',
     author: '管理者',
@@ -110,7 +110,7 @@ export const categories = [
   },
 ];
 
-// データベースから公開済み記事を取得する関数
+// データベースから公開済み図書を取得する関数
 export async function getPublishedArticles(): Promise<Article[]> {
   try {
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
@@ -123,7 +123,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('記事取得エラー:', error);
+      console.error('図書取得エラー:', error);
       return [];
     }
 
@@ -145,12 +145,12 @@ export async function getPublishedArticles(): Promise<Article[]> {
       tags: post.tags || [],
     }));
   } catch (error) {
-    console.error('記事取得エラー:', error);
+    console.error('図書取得エラー:', error);
     return [];
   }
 }
 
-// おすすめ記事を取得する関数
+// おすすめ図書を取得する関数
 export async function getRecommendedArticles(): Promise<Article[]> {
   try {
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
@@ -165,7 +165,7 @@ export async function getRecommendedArticles(): Promise<Article[]> {
       .limit(3);
 
     if (error) {
-      console.error('おすすめ記事取得エラー:', error);
+      console.error('おすすめ図書取得エラー:', error);
       return [];
     }
 
@@ -187,12 +187,12 @@ export async function getRecommendedArticles(): Promise<Article[]> {
       tags: post.tags || [],
     }));
   } catch (error) {
-    console.error('おすすめ記事取得エラー:', error);
+    console.error('おすすめ図書取得エラー:', error);
     return [];
   }
 }
 
-// カテゴリー別の公開済み記事を取得
+// カテゴリー別の公開済み図書を取得
 export async function getPublishedArticlesByCategory(categorySlug: string): Promise<Article[]> {
   const categoryName = categories.find(cat => cat.slug === categorySlug)?.name;
   if (!categoryName) return [];
@@ -209,7 +209,7 @@ export async function getPublishedArticlesByCategory(categorySlug: string): Prom
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('カテゴリー記事取得エラー:', error);
+      console.error('カテゴリー図書取得エラー:', error);
       return [];
     }
 
@@ -231,12 +231,12 @@ export async function getPublishedArticlesByCategory(categorySlug: string): Prom
       tags: post.tags || [],
     }));
   } catch (error) {
-    console.error('カテゴリー記事取得エラー:', error);
+    console.error('カテゴリー図書取得エラー:', error);
     return [];
   }
 }
 
-// 特定の記事を取得
+// 特定の図書を取得
 export async function getPublishedArticleById(id: string): Promise<Article | null> {
   try {
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
@@ -250,7 +250,7 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
       .single();
 
     if (error) {
-      console.error('記事取得エラー:', {
+      console.error('図書取得エラー:', {
         message: error.message,
         details: error.details,
         hint: error.hint,
@@ -260,7 +260,7 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
     }
 
     if (!data) {
-      console.error('記事が見つかりません:', id);
+      console.error('図書が見つかりません:', id);
       return null;
     }
 
@@ -285,7 +285,7 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
       allowLikes: post.allow_likes ?? true,
     };
   } catch (error) {
-    console.error('記事取得エラー:', {
+    console.error('図書取得エラー:', {
       message: error instanceof Error ? error.message : 'Unknown error',
       details: error instanceof Error ? error.stack : String(error),
       hint: 'Supabaseクライアントの初期化またはネットワーク接続に問題がある可能性があります',

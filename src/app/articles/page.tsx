@@ -13,11 +13,11 @@ export default async function ArticlesPage() {
       {/* ページヘッダー */}
       <section className="page-header">
         <div className="container-custom">
-          <h1 className="page-title">記事一覧</h1>
-          <p className="page-subtitle">
-            静かな図書室のすべての記事をご覧いただけます。<br />
-            思考と行動、キャリアと選択、気づきと日常の3つのカテゴリーから、あなたに響く記事を見つけてください。
-          </p>
+          <h1 className="page-title">図書一覧</h1>
+          {/* <p className="page-subtitle">
+            思整図書館のすべての図書をご覧いただけます。<br />
+            思考と行動、キャリアと選択、気づきと日常の3つのカテゴリーから、あなたに響く図書を見つけてください。
+          </p> */}
         </div>
       </section>
 
@@ -29,7 +29,7 @@ export default async function ArticlesPage() {
         </Link>
       </div>
 
-      {/* 記事一覧 */}
+      {/* 図書一覧 */}
       <section className="section-padding">
         <div className="container-custom">
           {articles.length > 0 ? (
@@ -50,20 +50,20 @@ export default async function ArticlesPage() {
                 ))}
               </div>
 
-              {/* 記事数表示 */}
+              {/* 図書数表示 */}
               <div className="mt-12 text-center">
                 <p className="text-gray-600">
-                  現在 {articles.length} 件の記事があります
+                  現在 {articles.length} 件の図書があります
                 </p>
               </div>
             </>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">
-                まだ記事がありません。
+                まだ図書がありません。
               </p>
               <p className="text-gray-500 mt-2">
-                新しい記事をお楽しみに。
+                新しい図書をお楽しみに。
               </p>
             </div>
           )}

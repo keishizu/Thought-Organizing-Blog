@@ -15,7 +15,7 @@ export default function PostFormExample() {
     await new Promise(resolve => setTimeout(resolve, 2000)) // 仮の遅延
     
     setIsLoading(false)
-    alert('記事が投稿されました！')
+    alert('図書が投稿されました！')
   }
 
   const handleSaveDraft = async (data: PostFormData) => {

@@ -22,7 +22,7 @@ export default function NewPostForm() {
         throw new Error("認証エラー")
       }
 
-      // 記事データを準備
+      // 図書データを準備
       const postData = {
         title: data.title,
         excerpt: data.subtitle || data.title.substring(0, 100), // サブタイトルがない場合はタイトルの一部を使用
@@ -52,10 +52,10 @@ export default function NewPostForm() {
 
       toast({
         title: "投稿完了",
-        description: "記事が正常に投稿されました。",
+        description: "図書が正常に投稿されました。",
       })
 
-      // 記事一覧ページにリダイレクト
+      // 図書一覧ページにリダイレクト
       router.push("/admin/posts")
       
     } catch (error) {
@@ -113,7 +113,7 @@ export default function NewPostForm() {
         description: "下書きが正常に保存されました。",
       })
 
-      // 記事一覧ページにリダイレクト
+      // 図書一覧ページにリダイレクト
       router.push("/admin/posts")
       
     } catch (error) {

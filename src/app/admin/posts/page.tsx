@@ -29,16 +29,16 @@ export default async function PostsPage() {
               <span>ダッシュボードに戻る</span>
             </Link>
             <div className="w-full">
-              <h1 className="page-title">記事管理</h1>
+              <h1 className="page-title">図書管理</h1>
               <p className="page-subtitle">
-                投稿した記事の一覧と管理
+                投稿した図書の一覧と管理
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 記事一覧 */}
+      {/* 図書一覧*/}
       <section className="section-padding">
         <div className="container-custom">
           <PostsList />

@@ -9,7 +9,7 @@ import { PostFormData } from "@/types/post"
 
 interface EditPostFormProps {
   postId: string
-  initialPost: any // Supabaseから取得した記事データ
+  initialPost: any // Supabaseから取得した図書データ
 }
 
 export default function EditPostForm({ postId, initialPost }: EditPostFormProps) {
@@ -63,7 +63,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         }
       }
 
-      // 記事データを準備
+      // 図書データを準備
       const postData = {
         title: data.title,
         excerpt: data.subtitle || data.title.substring(0, 100),
@@ -78,7 +78,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         updated_at: new Date().toISOString()
       }
 
-      // Supabaseで記事を更新
+      // Supabaseで図書を更新
       const { data: post, error } = await supabase
         .from('posts')
         .update(postData)
@@ -96,7 +96,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
 
       toast({
         title: "更新完了",
-        description: "記事が正常に更新されました。",
+        description: "図書が正常に更新されました。",
       })
 
       // 状態の更新が反映されるまで少し待機してからリダイレクト
@@ -162,7 +162,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
         updated_at: new Date().toISOString()
       }
 
-      // Supabaseで記事を更新
+      // Supabaseで図書を更新
       const { data: post, error } = await supabase
         .from('posts')
         .update(postData)
