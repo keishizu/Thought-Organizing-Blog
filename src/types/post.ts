@@ -20,9 +20,9 @@ export interface PostFormProps {
 }
 
 export const CATEGORIES = [
-  "思考と行動",
-  "キャリアと選択", 
-  "気づきと日常",
+  "思整術",
+  "仕事と分岐点", 
+  "日常と気づき",
   "お知らせ"
 ] as const
 

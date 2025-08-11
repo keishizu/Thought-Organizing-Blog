@@ -6,6 +6,10 @@ import Link from '@tiptap/extension-link'
 import Blockquote from '@tiptap/extension-blockquote'
 import CodeBlock from '@tiptap/extension-code-block'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableCell } from '@tiptap/extension-table-cell'
+import { TableHeader } from '@tiptap/extension-table-header'
 import { Button } from '@/components/ui/button'
 import { 
   Bold, 
@@ -19,7 +23,8 @@ import {
   Code,
   Minus,
   Undo,
-  Redo
+  Redo,
+  Table as TableIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useEffect } from 'react'
@@ -149,6 +154,16 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <Minus className="h-4 w-4" />
       </Button>
+      
+      <div className="w-px h-6 bg-gray-300 mx-1" />
+      
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+      >
+        <TableIcon className="h-4 w-4" />
+      </Button>
     </div>
   )
 }
@@ -176,6 +191,27 @@ export default function TipTapEditor({ content, onChange, placeholder }: TipTapE
       HorizontalRule.configure({
         HTMLAttributes: {
           class: 'border-t border-gray-300 my-4'
+        }
+      }),
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: 'border-collapse border border-gray-300 w-full'
+        }
+      }),
+      TableRow.configure({
+        HTMLAttributes: {
+          class: 'border-b border-gray-300'
+        }
+      }),
+      TableHeader.configure({
+        HTMLAttributes: {
+          class: 'bg-gray-50 font-semibold text-left p-2 border border-gray-300'
+        }
+      }),
+      TableCell.configure({
+        HTMLAttributes: {
+          class: 'p-2 border border-gray-300'
         }
       })
     ],

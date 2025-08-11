@@ -149,7 +149,7 @@ export default function AboutPage() {
         <div className="container-custom text-center">
           <h2 className="section-title">一緒に歩んでいきませんか</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            このサイトがあなたにとって、思考を整理し、新しい気づきを得る場所になれば幸いです。
+            ここがあなたにとって思考を整え、新しい気づきを得る、場所になれば幸いです。
             ご感想やご質問など、お気軽にお声がけください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

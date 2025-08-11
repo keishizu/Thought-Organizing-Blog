@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
-import { X, Plus, BookOpen, Star, User, Bell, ThumbsUp, MessageCircle, Heart, Check, X as XIcon, Save, Send, Eye } from 'lucide-react'
+import { X, Plus, BookOpen, Star, User, Bell, ThumbsUp, MessageCircle, Heart, Check, X as XIcon, Save, Send, Eye, Upload } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import TipTapEditor from '@/components/editor/TipTapEditor'
 import ImageUpload from '@/components/admin/ImageUpload'
@@ -43,12 +43,14 @@ export default function PostForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [tagInput, setTagInput] = useState('')
+  const [isImporting, setIsImporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // カテゴリーとアイコンのマッピング
   const categoryIcons = {
-    "思考と行動": BookOpen,
-    "キャリアと選択": Star,
-    "気づきと日常": User,
+    "思整術": BookOpen,
+    "仕事と分岐点": Star,
+    "日常と気づき": User,
     "お知らせ": Bell
   }
 
@@ -287,6 +289,71 @@ export default function PostForm({
     })
   }
 
+  // ファイル取り込み処理
+  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setIsImporting(true)
+    
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/import-post', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'ファイルの取り込みに失敗しました')
+      }
+
+      const data = await response.json()
+      
+      if (data.success) {
+        // フォームデータを更新
+        setFormData(prev => ({
+          ...prev,
+          content: data.content,
+          title: data.formData.title || prev.title,
+          subtitle: data.formData.subtitle || prev.subtitle,
+          tags: data.formData.tags.length > 0 ? data.formData.tags : prev.tags,
+          category: data.formData.category || prev.category,
+          imageUrl: data.formData.imageUrl || prev.imageUrl,
+          isRecommended: data.formData.isRecommended !== undefined ? data.formData.isRecommended : prev.isRecommended,
+          allowComments: data.formData.allowComments !== undefined ? data.formData.allowComments : prev.allowComments,
+          allowLikes: data.formData.allowLikes !== undefined ? data.formData.allowLikes : prev.allowLikes
+        }))
+
+        toast({
+          title: "取り込み完了",
+          description: data.message,
+          variant: "default"
+        })
+      }
+    } catch (error: any) {
+      console.error('ファイル取り込みエラー:', error)
+      toast({
+        title: "取り込みエラー",
+        description: error.message || 'ファイルの取り込み中にエラーが発生しました',
+        variant: "destructive"
+      })
+    } finally {
+      setIsImporting(false)
+      // ファイル入力をリセット（同じファイルを再度選択できるように）
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  // ファイル選択ダイアログを開く
+  const openFileDialog = () => {
+    fileInputRef.current?.click()
+  }
+
   return (
     <div className="space-y-8">
       {/* カバー画像 */}
@@ -452,14 +519,38 @@ export default function PostForm({
 
       {/* 本文 */}
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+              <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <Label className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>本文 *</Label>
           </div>
-          <Label className="text-lg font-medium" style={{ fontFamily: 'var(--font-secondary)' }}>本文 *</Label>
+          
+          {/* ファイルから読み込みボタン */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={openFileDialog}
+            disabled={isImporting}
+            className="flex items-center gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            {isImporting ? '取り込み中...' : 'ファイルから読み込み'}
+          </Button>
         </div>
+        
+        {/* ファイル入力（非表示） */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".md,.mdx,.html,.docx"
+          onChange={handleFileImport}
+          className="hidden"
+        />
+        
         <TipTapEditor
           content={formData.content}
           onChange={(content) => setFormData(prev => ({ ...prev, content }))}
@@ -468,6 +559,19 @@ export default function PostForm({
         {errors.content && (
           <p className="text-sm text-red-600">{errors.content}</p>
         )}
+        
+        {/* ファイル取り込みの説明 */}
+        <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+          <p className="font-medium mb-1">対応ファイル形式:</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li><strong>.md/.mdx:</strong> Markdownファイル（フロントマター対応）</li>
+            <li><strong>.html:</strong> HTMLファイル</li>
+            <li><strong>.docx:</strong> Word文書</li>
+          </ul>
+          <p className="mt-2 text-xs">
+            フロントマターがある場合、タイトル、サブタイトル、タグ、カテゴリ等が自動的に反映されます。
+          </p>
+        </div>
       </div>
 
       <Separator />

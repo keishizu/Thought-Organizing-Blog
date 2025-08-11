@@ -36,9 +36,9 @@ export default function Header() {
   ];
 
   const categoryItems = [
-    { name: '思考と行動', href: '/categories/thinking-action' },
-    { name: 'キャリアと選択', href: '/categories/career-choice' },
-    { name: '気づきと日常', href: '/categories/insights-daily' },
+    { name: '思整術', href: '/categories/thinking-action' },
+    { name: '仕事と分岐点', href: '/categories/career-choice' },
+    { name: '日常と気づき', href: '/categories/insights-daily' },
   ];
 
   return (

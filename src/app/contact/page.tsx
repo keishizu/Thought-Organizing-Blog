@@ -79,7 +79,6 @@ export default function ContactPage() {
             
             <p className="text-gray-600 mb-8 leading-relaxed">
               図書へのご感想、サイトへのご意見、ご質問など、どんなことでもお気軽にお聞かせください。
-              いただいたメッセージには、必ずお返事いたします。
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">

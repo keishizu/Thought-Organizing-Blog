@@ -14,20 +14,20 @@ export default async function Home() {
 
   const categories = [
     {
-      title: '思考と行動',
-      description: '日々の選択や決断について立ち止まって考える。自分の価値観や行動パターンを見つめ直すきっかけに。',
+      title: '思整術',
+      description: '感情や考えを整理し行動に移すための方法の紹介をテーマに、日常に取り入れやすい思考の整理術をお届けします。',
       href: '/categories/thinking-action',
       icon: <Brain size={32} />,
     },
     {
-      title: 'キャリアと選択',
-      description: '仕事や人生の方向性について。迷いながらも前に進む、そんな体験談や気づきを綴ります。',
+      title: '仕事と分岐点',
+      description: '働き方の選択や転機をテーマに、迷いや不安を抱えながらも、自分らしい道を見つけるヒントをお届けします。',
       href: '/categories/career-choice',
       icon: <Compass size={32} />,
     },
     {
-      title: '気づきと日常',
-      description: '何気ない日常の中に隠れている小さな発見や学び。ふとした瞬間の美しさを言葉にして。',
+      title: '日常と気づき',
+      description: '日々の出来事から生まれる小さな気づきをテーマに、忙しい日常の中で自分を見つめ直すキッカケをお届けします。',
       href: '/categories/insights-daily',
       icon: <Eye size={32} />,
     },
@@ -136,12 +136,12 @@ export default async function Home() {
         <div className="container-custom text-center">
           <h2 className="section-title">一緒に考えてみませんか？</h2>
           <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-            このサイトが、あなたの思考を整理し、新しい気づきを得るきっかけになれば嬉しいです。
-            何かご感想やご質問がありましたら、お気軽にお声がけください。
+          ここがあなたにとって思考を整え、新しい気づきを得る、場所になれば幸いです。
+          ご感想やご質問など、お気軽にお声がけください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/about" className="btn-primary">
-              私について知る
+              思整図書館とは
             </Link>
             <Link href="/contact" className="btn-secondary">
               お問い合わせ
