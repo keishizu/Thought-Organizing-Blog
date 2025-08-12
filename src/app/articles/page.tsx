@@ -14,10 +14,6 @@ export default async function ArticlesPage() {
       <section className="page-header">
         <div className="container-custom">
           <h1 className="page-title">図書一覧</h1>
-          {/* <p className="page-subtitle">
-            思整図書館のすべての図書をご覧いただけます。<br />
-            思整術、仕事と分岐点、日常と気づきの3つのカテゴリーから、あなたに響く図書を見つけてください。
-          </p> */}
         </div>
       </section>
 

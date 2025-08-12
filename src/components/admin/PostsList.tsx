@@ -149,7 +149,7 @@ export default function PostsList() {
       // 画像が存在する場合、画像も削除
       if (post?.image_url) {
         try {
-          const deleteResponse = await fetch('/api/delete-image', {
+          const deleteResponse = await fetch('/api/upload/delete', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

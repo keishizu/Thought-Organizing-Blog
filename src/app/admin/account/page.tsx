@@ -114,7 +114,7 @@ export default function AccountPage() {
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await fetch('/api/upload-profile-image', {
+      const response = await fetch('/api/upload/profile', {
         method: 'POST',
         body: formData
       })

@@ -62,9 +62,6 @@ export default function ContactPage() {
       <section className="page-header">
         <div className="container-custom">
           <h1 className="page-title">お問い合わせ</h1>
-          {/* <p className="page-subtitle">
-            ご質問、ご感想、ご提案など、お気軽にお声がけください。
-          </p> */}
         </div>
       </section>
 

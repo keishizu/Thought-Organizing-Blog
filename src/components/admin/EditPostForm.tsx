@@ -45,7 +45,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
       // 画像が変更された場合、古い画像を削除
       if (data.imageUrl !== currentPost.image_url && currentPost.image_url) {
         try {
-          const deleteResponse = await fetch('/api/delete-image', {
+          const deleteResponse = await fetch('/api/upload/delete', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
       // 画像が変更された場合、古い画像を削除
       if (data.imageUrl !== currentPost.image_url && currentPost.image_url) {
         try {
-          const deleteResponse = await fetch('/api/delete-image', {
+          const deleteResponse = await fetch('/api/upload/delete', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

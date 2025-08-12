@@ -207,7 +207,7 @@ export default function PostForm({
       const formData = new FormData()
       formData.append('file', resizedFile)
 
-      const response = await fetch('/api/upload-image', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       })
