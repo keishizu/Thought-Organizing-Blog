@@ -444,3 +444,233 @@
     @apply text-lg;
   }
 }
+
+/* TipTapエディター内の見出しスタイル */
+.prose h1 {
+  @apply text-3xl font-bold mb-4 mt-6;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.prose h2 {
+  @apply text-2xl font-semibold mb-3 mt-5;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+  border-bottom: 1px solid var(--color-secondary);
+  padding-bottom: 0.25rem;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mb-2 mt-4;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+}
+
+.prose h4 {
+  @apply text-lg font-medium mb-2 mt-3;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+}
+
+.prose h5 {
+  @apply text-base font-medium mb-2 mt-3;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+}
+
+.prose h6 {
+  @apply text-sm font-medium mb-2 mt-3;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+}
+
+/* 記事詳細ページでの箇条書きスタイル */
+.prose ul {
+  list-style-type: disc !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.prose ol {
+  list-style-type: decimal !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.prose li {
+  margin: 0.25em 0 !important;
+  display: list-item !important;
+}
+
+.prose ul li::marker {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+.prose ol li::marker {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* 記事詳細ページでの箇条書きスタイル（より強力なセレクタ） */
+.prose .text-gray-700 ul {
+  list-style-type: disc !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.prose .text-gray-700 ol {
+  list-style-type: decimal !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.prose .text-gray-700 li {
+  margin: 0.25em 0 !important;
+  display: list-item !important;
+}
+
+/* 記事本文専用の箇条書きスタイル */
+.article-content ul {
+  list-style-type: disc !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.article-content ol {
+  list-style-type: decimal !important;
+  margin: 0.5em 0 !important;
+  padding-left: 2em !important;
+}
+
+.article-content li {
+  margin: 0.25em 0 !important;
+  display: list-item !important;
+}
+
+.article-content ul li::marker {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+.article-content ol li::marker {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* エディター内の見出しのフォーカス状態 */
+.prose h1:focus,
+.prose h2:focus,
+.prose h3:focus,
+.prose h4:focus,
+.prose h5:focus,
+.prose h6:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* TipTapエディター用スタイル */
+.ProseMirror {
+  outline: none;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.ProseMirror h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+  color: #111827;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+  color: #111827;
+}
+
+.ProseMirror h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+  color: #111827;
+}
+
+.ProseMirror p {
+  margin: 0.5em 0;
+}
+
+.ProseMirror strong {
+  font-weight: bold;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ProseMirror code {
+  background-color: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.ProseMirror pre {
+  background-color: #f3f4f6;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.ProseMirror pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #d1d5db;
+  margin: 1em 0;
+  padding-left: 1em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  margin: 0.5em 0;
+  padding-left: 2em;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  margin: 0.5em 0;
+  padding-left: 2em;
+}
+
+.ProseMirror li {
+  margin: 0.25em 0;
+  display: list-item;
+}
+
+.ProseMirror ul li::marker {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.ProseMirror ol li::marker {
+  color: #6b7280;
+  font-weight: 500;
+}

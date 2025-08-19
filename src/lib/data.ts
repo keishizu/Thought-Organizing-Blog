@@ -40,21 +40,21 @@ export const categories = [
   {
     id: 'thinking-action',
     name: '思整術',
-    description: '感情や考えを整理し行動に移すための方法の紹介をテーマに、日常に取り入れやすい思考の整理術をお届けします。',
     slug: 'thinking-action',
+    description: '感情や考えを整理し行動に移すための方法の紹介をテーマに、日常に取り入れやすい思考の整理術をお届けします。'
   },
   {
     id: 'career-choice',
     name: '仕事と分岐点',
-    description: '働き方の選択や転機をテーマに、迷いや不安を抱えながらも、自分らしい道を見つけるヒントをお届けします。',
     slug: 'career-choice',
+    description: '働き方の選択や転機をテーマに、迷いや不安を抱えながらも、自分らしい道を見つけるヒントをお届けします。'
   },
   {
     id: 'insights-daily',
     name: '日常と気づき',
-    description: '日々の出来事から生まれる小さな気づきをテーマに、忙しい日常の中で自分を見つめ直すキッカケをお届けします。',
     slug: 'insights-daily',
-  },
+    description: '日々の出来事から生まれる小さな気づきをテーマに、忙しい日常の中で自分を見つめ直すキッカケをお届けします。'
+  }
 ];
 
 // データベースから公開済み図書を取得する関数
@@ -108,8 +108,7 @@ export async function getRecommendedArticles(): Promise<Article[]> {
       .select('*')
       .eq('status', 'published')
       .eq('is_recommended', true)
-      .order('created_at', { ascending: false })
-      .limit(3);
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('おすすめ図書取得エラー:', error);
@@ -139,7 +138,7 @@ export async function getRecommendedArticles(): Promise<Article[]> {
   }
 }
 
-// カテゴリー別の公開済み図書を取得
+// カテゴリー別の公開済み図書を取得する関数
 export async function getPublishedArticlesByCategory(categorySlug: string): Promise<Article[]> {
   const categoryName = categories.find(cat => cat.slug === categorySlug)?.name;
   if (!categoryName) return [];
@@ -189,6 +188,7 @@ export async function getPublishedArticleById(id: string): Promise<Article | nul
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
     const supabase = await createServerSupabaseClient();
     
+    // キャッシュを無効化して常に最新のデータを取得
     const { data, error } = await supabase
       .from('posts')
       .select('*')

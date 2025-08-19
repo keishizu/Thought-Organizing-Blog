@@ -4,8 +4,9 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import CategorySection from '@/components/blog/CategorySection';
 import { getPublishedArticles, getRecommendedArticles } from '@/lib/data';
 
-// 動的レンダリングを明示的に指定
+// キャッシュを無効化し、常に最新のデータを取得
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   const allArticles = await getPublishedArticles();
@@ -77,10 +78,10 @@ export default async function Home() {
 
       {/* おすすめ図書セクション */}
       {recommendedArticles.length > 0 && (
-        <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F5F3F0 100%)'}}>
+        <section className="section-padding bg-gray-50">
           <div className="container-custom">
-            <h2 className="section-title">おすすめの図書</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <h2 className="section-title">おすすめ図書</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {recommendedArticles.map((article) => (
                 <ArticleCard
                   key={article.id}
@@ -95,60 +96,38 @@ export default async function Home() {
                 />
               ))}
             </div>
-            <div className="text-center">
-              <Link href="/articles" className="btn-secondary">
-                すべての図書を見る
-              </Link>
-            </div>
           </div>
         </section>
       )}
 
-      {/* 新着図書セクション */}
-      <section id="recent-articles" className="section-padding">
-        <div className="container-custom">
-          <h2 className="section-title">新着図書</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-            {recentArticles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                id={article.id}
-                title={article.title}
-                excerpt={article.excerpt}
-                category={article.category}
-                date={article.date}
-                imageUrl={article.imageUrl}
-                likes={article.likes}
-                readTime={article.readTime}
-              />
-            ))}
+      {/* 最新図書セクション */}
+      {recentArticles.length > 0 && (
+        <section className="section-padding">
+          <div className="container-custom">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="section-title">最新図書</h2>
+              <Link href="/articles" className="text-primary hover:underline font-medium">
+                すべての図書を見る →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {recentArticles.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  id={article.id}
+                  title={article.title}
+                  excerpt={article.excerpt}
+                  category={article.category}
+                  date={article.date}
+                  imageUrl={article.imageUrl}
+                  likes={article.likes}
+                  readTime={article.readTime}
+                />
+              ))}
+            </div>
           </div>
-          <div className="text-center">
-            <Link href="/articles" className="btn-secondary">
-              新着図書をもっと見る
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA セクション */}
-      <section className="section-padding" style={{background: 'linear-gradient(135deg, #FAF9F7 0%, #F0EDE8 100%)'}}>
-        <div className="container-custom text-center">
-          <h2 className="section-title">一緒に考えてみませんか？</h2>
-          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-          ここがあなたにとって思考を整え、新しい気づきを得る、場所になれば幸いです。
-          ご感想やご質問など、お気軽にお声がけください。
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/about" className="btn-primary">
-              思整図書館とは
-            </Link>
-            <Link href="/contact" className="btn-secondary">
-              お問い合わせ
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

@@ -70,14 +70,14 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
 
         {/* 図書本文 */}
         <div className="prose prose-lg max-w-none mb-12">
-          <div className="text-gray-700 leading-relaxed space-y-6">
+          <div className="text-gray-700 leading-relaxed space-y-6 article-content">
             <p className="text-lg font-medium text-gray-800 leading-relaxed">
               {article.excerpt}
             </p>
             
             {/* HTMLコンテンツを安全に表示 */}
             <div 
-              className="prose prose-lg max-w-none"
+              className="prose prose-lg max-w-none article-content"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
           </div>

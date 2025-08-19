@@ -1,11 +1,12 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { getPublishedArticlesByCategory, categories } from '@/lib/data';
 import ArticleCard from '@/components/blog/ArticleCard';
-import { categories, getPublishedArticlesByCategory } from '@/lib/data';
 
-// 動的レンダリングを明示的に指定
+// キャッシュを無効化し、常に最新のデータを取得
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   return categories.map((category) => ({

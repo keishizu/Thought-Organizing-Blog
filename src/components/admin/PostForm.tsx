@@ -131,39 +131,31 @@ export default function PostForm({
     }
   }
 
-  // プレビュー処理
+  // プレビュー処理（別ページ遷移）
   const handlePreview = () => {
     if (!validateForm()) {
       return
     }
 
-    const params = new URLSearchParams({
+    // プレビューデータをセッションストレージに保存
+    const previewData = {
       title: formData.title,
-      subtitle: formData.subtitle || '',
+      subtitle: formData.subtitle,
       category: formData.category,
-      tags: JSON.stringify(formData.tags),
+      tags: formData.tags,
       content: formData.content,
-      imageUrl: formData.imageUrl || '',
-      allowComments: formData.allowComments.toString(),
-      allowLikes: formData.allowLikes.toString()
-    })
-
-    // URLの総長をチェック（サーバーサイドアップロードの場合は制限を緩和）
-    const fullUrl = `/admin/posts/preview?${params.toString()}`
-    console.log('Full preview URL length:', fullUrl.length)
-    
-    if (fullUrl.length > 8000) {
-      console.log('Preview URL too long:', fullUrl.length, 'characters')
-      toast({
-        title: "プレビュー制限",
-        description: "データが大きすぎるため、プレビューを表示できません。内容を簡潔にしてから再度お試しください。",
-        variant: "destructive"
-      })
-      return
+      imageUrl: formData.imageUrl,
+      allowComments: formData.allowComments,
+      allowLikes: formData.allowLikes
     }
-
-    window.open(fullUrl, '_blank')
+    
+    sessionStorage.setItem('articlePreviewData', JSON.stringify(previewData))
+    
+    // プレビューページに遷移
+    window.open('/admin/posts/preview', '_blank')
   }
+
+
 
   // フォーム送信処理
   const handleSubmit = (status: 'published' | 'draft') => {
@@ -414,13 +406,13 @@ export default function PostForm({
           value={formData.subtitle}
           onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
           placeholder="図書のサブタイトルを入力してください（任意）"
-          maxLength={60}
+          maxLength={20}
         />
         {errors.subtitle && (
           <p className="text-sm text-red-600">{errors.subtitle}</p>
         )}
         <p className="text-xs text-gray-500">
-          {formData.subtitle?.length || 0}/60文字
+          {formData.subtitle?.length || 0}/20文字
         </p>
       </div>
 
@@ -738,6 +730,8 @@ export default function PostForm({
           <span>{isLoading ? (isEdit ? '更新中...' : '投稿中...') : (isEdit ? '図書を更新する' : '図書を投稿する')}</span>
         </button>
       </div>
+
+
     </div>
   )
 } 

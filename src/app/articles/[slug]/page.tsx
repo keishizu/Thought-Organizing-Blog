@@ -6,6 +6,10 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import LikeButton from '@/components/likes/LikeButton';
 import CommentSection from '@/components/comments/CommentSection';
 
+// キャッシュを無効化し、常に最新のデータを取得
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface PostPageProps {
   params: Promise<{
     slug: string;
@@ -82,7 +86,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
           {/* 図書本文 */}
           <div className="prose prose-lg max-w-none mb-12">
-            <div className="text-gray-700 leading-relaxed space-y-6">
+            <div className="text-gray-700 leading-relaxed space-y-6 article-content">
               {article.content && (
                 <div dangerouslySetInnerHTML={{ __html: article.content }} />
               )}
