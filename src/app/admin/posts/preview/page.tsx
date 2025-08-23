@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Edit, Eye } from 'lucide-react'
+import { ArrowLeft, Edit, Eye, Tag } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 
 interface PreviewData {
+  id: string
   title: string
   subtitle?: string
   category: string
@@ -144,7 +145,7 @@ export default function PreviewPage() {
                   key={tag}
                   className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700"
                 >
-                  <Eye size={12} className="mr-1" />
+                  <Tag size={12} className="mr-1" />
                   {tag}
                 </span>
               ))}
@@ -161,9 +162,9 @@ export default function PreviewPage() {
           </div>
         </div>
 
-        {/* いいね・コメント設定 */}
+        {/* いいね・コメントセクション */}
         <div className="bg-gray-50 rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">設定</h3>
+          <h3 className="text-lg font-semibold mb-4">プレビュー用設定表示</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-3">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
@@ -194,6 +195,9 @@ export default function PreviewPage() {
               </span>
             </div>
           </div>
+          <p className="text-sm text-gray-500 mt-4">
+            ※ これはプレビュー画面です。実際のいいね・コメント機能は動作しません。
+          </p>
         </div>
 
         {/* 著者紹介 */}

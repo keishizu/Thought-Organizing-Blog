@@ -63,11 +63,18 @@ export async function getPublishedArticles(): Promise<Article[]> {
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
     const supabase = await createServerSupabaseClient();
     
-    const { data, error } = await supabase
+    // ネットワークタイムアウトを設定
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('ネットワークタイムアウト')), 10000); // 10秒
+    });
+    
+    const dataPromise = supabase
       .from('posts')
       .select('*')
       .eq('status', 'published')
       .order('created_at', { ascending: false });
+
+    const { data, error } = await Promise.race([dataPromise, timeoutPromise]) as any;
 
     if (error) {
       console.error('図書取得エラー:', error);
@@ -92,7 +99,18 @@ export async function getPublishedArticles(): Promise<Article[]> {
       tags: post.tags || [],
     }));
   } catch (error) {
-    console.error('図書取得エラー:', error);
+    // エラーの詳細をログに出力
+    if (error instanceof Error) {
+      console.error('図書取得エラー:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+    } else {
+      console.error('図書取得エラー（不明なエラー）:', error);
+    }
+    
+    // ネットワークエラーの場合は空配列を返す
     return [];
   }
 }
@@ -103,12 +121,19 @@ export async function getRecommendedArticles(): Promise<Article[]> {
     const { createServerSupabaseClient } = await import('@/lib/supabase-server');
     const supabase = await createServerSupabaseClient();
     
-    const { data, error } = await supabase
+    // ネットワークタイムアウトを設定
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('ネットワークタイムアウト')), 10000); // 10秒
+    });
+    
+    const dataPromise = supabase
       .from('posts')
       .select('*')
       .eq('status', 'published')
       .eq('is_recommended', true)
       .order('created_at', { ascending: false });
+
+    const { data, error } = await Promise.race([dataPromise, timeoutPromise]) as any;
 
     if (error) {
       console.error('おすすめ図書取得エラー:', error);
@@ -133,7 +158,18 @@ export async function getRecommendedArticles(): Promise<Article[]> {
       tags: post.tags || [],
     }));
   } catch (error) {
-    console.error('おすすめ図書取得エラー:', error);
+    // エラーの詳細をログに出力
+    if (error instanceof Error) {
+      console.error('おすすめ図書取得エラー:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+    } else {
+      console.error('おすすめ図書取得エラー（不明なエラー）:', error);
+    }
+    
+    // ネットワークエラーの場合は空配列を返す
     return [];
   }
 }

@@ -102,17 +102,23 @@ export default function PostsList() {
   }
 
   const handlePreview = (post: Post) => {
-    const params = new URLSearchParams({
+    // プレビューデータをセッションストレージに保存
+    const previewData = {
       id: post.id,
       title: post.title,
       subtitle: post.excerpt || '',
       category: post.category,
-      tags: JSON.stringify(post.tags || []),
+      tags: post.tags || [],
       content: post.content,
-      imageUrl: post.image_url || ''
-    })
-
-    window.open(`/admin/posts/preview?${params.toString()}`, '_blank')
+      imageUrl: post.image_url || '',
+      allowComments: post.allow_comments ?? true,
+      allowLikes: post.allow_likes ?? true
+    }
+    
+    sessionStorage.setItem('articlePreviewData', JSON.stringify(previewData))
+    
+    // プレビューページに遷移
+    router.push('/admin/posts/preview')
   }
 
   const handleDelete = async (postId: string) => {
