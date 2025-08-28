@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { getPublishedArticlesByCategory, categories } from '@/lib/data';
 import ArticleCard from '@/components/blog/ArticleCard';
+import { Metadata } from 'next';
 
 // キャッシュを無効化し、常に最新のデータを取得
 export const dynamic = 'force-dynamic';
@@ -18,6 +19,58 @@ interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+// メタデータの生成
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  try {
+    const { slug } = await params;
+    const category = categories.find(cat => cat.slug === slug);
+    
+    if (!category) {
+      return {
+        title: 'カテゴリーが見つかりません - 思整図書館',
+        description: 'お探しのカテゴリーは存在しないか、移動または削除された可能性があります。',
+      };
+    }
+
+    const baseUrl = 'https://thought-organizing-blog.vercel.app';
+    
+    return {
+      title: `${category.name} - 思整図書館`,
+      description: `${category.description} このカテゴリーの図書一覧をご覧いただけます。`,
+      keywords: `${category.name}, ${category.description}, 思考整理, 内省, 気づき, カテゴリー`,
+      authors: [{ name: '思整図書館' }],
+      openGraph: {
+        title: `${category.name} - 思整図書館`,
+        description: `${category.description} このカテゴリーの図書一覧をご覧いただけます。`,
+        type: 'website',
+        locale: 'ja_JP',
+        images: [
+          {
+            url: `${baseUrl}/OGP画像.png`,
+            width: 1200,
+            height: 630,
+            alt: `思整図書館 ${category.name}`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${category.name} - 思整図書館`,
+        description: `${category.description} このカテゴリーの図書一覧をご覧いただけます。`,
+        images: [`${baseUrl}/OGP画像.png`],
+      },
+      alternates: {
+        canonical: `${baseUrl}/categories/${slug}`,
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'カテゴリー - 思整図書館',
+      description: 'カテゴリー別の図書一覧を表示しています。',
+    };
+  }
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

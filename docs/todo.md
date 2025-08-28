@@ -119,36 +119,45 @@
 - [x] ローディング状態の確認と改善
 
 ### 7.2 本番環境構築
-- [ ] Vercelにて本番用プロジェクトを作成
-- [ ] Vercel側で環境変数を設定
-  - [ ] `NEXT_PUBLIC_SUPABASE_URL`
-  - [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-  - [ ] `SUPABASE_SERVICE_ROLE_KEY`（必要に応じて）
-- [ ] 本番ドメインのSSL設定確認
-- [ ] カスタムドメインの設定（必要に応じて）
+- [x] Vercelにて本番用プロジェクトを作成
+- [x] Vercel側で環境変数を設定
+  - [x] **Supabase関連（必須）**
+    - [x] `NEXT_PUBLIC_SUPABASE_URL`
+    - [x] `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - [x] **メール送信関連（必須）**
+    - [x] `SMTP_HOST` (例: smtp.gmail.com)
+    - [x] `SMTP_PORT` (例: 587)
+    - [x] `SMTP_USER` (Gmailアドレス)
+    - [x] `SMTP_PASS` (Gmailアプリパスワード)
+    - [x] `CONTACT_EMAIL` (管理者宛メールアドレス)
+- [x] 本番ドメインのSSL設定確認
+  - [x] VercelダッシュボードでSSL証明書が「Valid」状態
+  - [x] ブラウザで🔒アイコンが表示される
+  - [x] 証明書の詳細で正しいドメイン名が表示される
+  - [x] 混合コンテンツエラーがない
+  - [x] オンラインツールでSSLテストが通る
 
 ### 7.3 Supabase本番設定
-- [ ] Supabase Auth本番設定の確認
-  - [ ] 本番環境のredirect URL設定
-  - [ ] 本番環境のSite URL設定
-  - [ ] メール認証の設定確認
-- [ ] 本番環境のRLSポリシー動作確認
-- [ ] 本番環境のデータベース接続確認
+- [x] Supabase Auth本番設定の確認
+  - [x] 本番環境のredirect URL設定
+  - [x] 本番環境のSite URL設定
+  - [x] メール認証の設定確認（パスワード認証のみ実装済み）
+- [x] 本番環境のRLSポリシー動作確認
+- [x] 本番環境のデータベース接続確認
 
 ### 7.4 SEO・メタ情報最適化
-- [ ] メタ情報の追加（タイトル・ディスクリプション・OGP対応）
-  - [ ] 個別ページのメタ情報設定
-    - [ ] 図書詳細ページ
-    - [ ] プロフィールページ
-    - [ ] 図書一覧ページ
-    - [ ] カテゴリーページ
-  - [ ] OGP画像の設定
-    - [ ] デフォルトOGP画像（1200x630px）
-    - [ ] 図書別OGP画像生成機能
-  - [ ] Twitter Card対応
-  - [ ] 構造化データ（JSON-LD）の実装
-- [ ] robots.txtの設定
-- [ ] sitemap.xmlの生成・設定
+- [x] メタ情報の追加（タイトル・ディスクリプション・OGP対応）
+  - [x] 個別ページのメタ情報設定
+    - [x] 図書詳細ページ
+    - [x] 図書一覧ページ
+    - [x] カテゴリーページ
+  - [x] OGP画像の設定
+    - [x] デフォルトOGP画像（1200x630px）
+    - [x] 図書別OGP画像生成機能
+  - [x] Twitter Card対応
+  - [x] 構造化データ（JSON-LD）の実装
+- [x] robots.txtの設定
+- [x] sitemap.xmlの生成・設定
 
 ### 7.5 パフォーマンス最適化
 - [ ] Lighthouse スコアの確認と改善

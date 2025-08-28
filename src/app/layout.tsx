@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Layout from '@/components/layout/Layout';
+import { PerformanceMonitor } from '@/components/common/PerformanceMonitor';
 
 export const metadata: Metadata = {
   title: '思整図書館 - 思考を整える、静かな空間。',
@@ -15,14 +16,22 @@ export const metadata: Metadata = {
     description: 'あなたの思考を整えるための静かな空間、思整図書館。内省や気づきをことばにして、自分と向き合うヒントを届けます。',
     type: 'website',
     locale: 'ja_JP',
+    images: [
+      {
+        url: 'https://thought-organizing-blog.vercel.app/OGP画像.png',
+        width: 1200,
+        height: 630,
+        alt: '思整図書館 - 思考を整える、静かな空間。',
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: '思整図書館 - 思考を整える、静かな空間。',
     description: 'あなたの思考を整えるための静かな空間、思整図書館。内省や気づきをことばにして、自分と向き合うヒントを届けます。',
+    images: ['https://thought-organizing-blog.vercel.app/OGP画像.png'],
   },
 };
-
 
 export default function RootLayout({
   children,
@@ -31,10 +40,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      <head>
+        {/* DNSプリフェッチ */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        
+        {/* プリロード */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body>
         <Layout>
           {children}
         </Layout>
+        <PerformanceMonitor />
       </body>
     </html>
   );

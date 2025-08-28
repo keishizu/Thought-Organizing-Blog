@@ -1,0 +1,33 @@
+import { defineConfig, devices } from '@playwright/test'
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: false, // 並列実行を無効化
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: 1, // ワーカー数を1に制限
+  reporter: 'html',
+  
+  use: {
+    baseURL: 'https://thought-organizing-blog.vercel.app',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    // タイムアウトを長めに設定（本番環境用）
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
+  },
+
+  // Chromiumのみを使用
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+
+  // 本番環境用の設定
+  webServer: undefined,
+  
+  // テストタイムアウトを長めに設定
+  timeout: 60000,
+})

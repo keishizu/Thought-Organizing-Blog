@@ -5,6 +5,7 @@ import { getPublishedArticleById, getPublishedArticles } from '@/lib/data';
 import ArticleCard from '@/components/blog/ArticleCard';
 import LikeButton from '@/components/likes/LikeButton';
 import CommentSection from '@/components/comments/CommentSection';
+import { Metadata } from 'next';
 
 // キャッシュを無効化し、常に最新のデータを取得
 export const dynamic = 'force-dynamic';
@@ -14,6 +15,62 @@ interface PostPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+// メタデータの生成
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  try {
+    const { slug } = await params;
+    const article = await getPublishedArticleById(slug);
+    
+    if (!article) {
+      return {
+        title: '図書が見つかりません - 思整図書館',
+        description: 'お探しの図書は存在しないか、移動または削除された可能性があります。',
+      };
+    }
+
+    const baseUrl = 'https://thought-organizing-blog.vercel.app';
+    const imageUrl = article.imageUrl || `${baseUrl}/OGP画像.png`;
+
+    return {
+      title: `${article.title} - 思整図書館`,
+      description: article.excerpt || `${article.title}について詳しく解説しています。`,
+      keywords: [...article.tags, article.category, '思考整理', '内省', '気づき'].join(', '),
+      authors: [{ name: '思整図書館' }],
+      openGraph: {
+        title: article.title,
+        description: article.excerpt || `${article.title}について詳しく解説しています。`,
+        type: 'article',
+        locale: 'ja_JP',
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: article.title,
+          },
+        ],
+        publishedTime: article.date,
+        authors: ['思整図書館'],
+        tags: article.tags,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article.title,
+        description: article.excerpt || `${article.title}について詳しく解説しています。`,
+        images: [imageUrl],
+      },
+      alternates: {
+        canonical: `${baseUrl}/articles/${slug}`,
+      },
+    };
+  } catch (error) {
+    return {
+      title: '図書詳細 - 思整図書館',
+      description: '図書の詳細情報を表示しています。',
+    };
+  }
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -31,8 +88,48 @@ export default async function PostPage({ params }: PostPageProps) {
       .filter(a => a.id !== article.id && a.category === article.category)
       .slice(0, 3);
 
+    // 構造化データ（JSON-LD）の生成
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: article.title,
+      description: article.excerpt,
+      image: article.imageUrl || 'https://thought-organizing-blog.vercel.app/OGP画像.png',
+      author: {
+        '@type': 'Organization',
+        name: '思整図書館',
+        url: 'https://thought-organizing-blog.vercel.app'
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: '思整図書館',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://thought-organizing-blog.vercel.app/logo/logo2.svg'
+        }
+      },
+      datePublished: article.date,
+      dateModified: article.date,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://thought-organizing-blog.vercel.app/articles/${slug}`
+      },
+      articleSection: article.category,
+      keywords: article.tags.join(', '),
+      wordCount: article.content ? article.content.length : 0,
+      timeRequired: article.readTime
+    };
+
     return (
       <div>
+        {/* 構造化データの埋め込み */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData)
+          }}
+        />
+        
         {/* 戻るボタン */}
         <div className="container-custom py-4">
           <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
@@ -105,32 +202,16 @@ export default async function PostPage({ params }: PostPageProps) {
 
           {/* コメントセクション */}
           {article.allowComments && (
-            <CommentSection
-              postId={article.id}
+            <CommentSection 
+              postId={article.id} 
               initialCommentCount={0}
             />
           )}
 
-          {/* 著者紹介
-          <div className="card-base p-6 mb-12">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-2">管理者</h3>
-                <p className="text-gray-600">
-                  日々の気づきや内省を通じて、思考を言葉にすることを大切にしています。
-                  このサイトが、あなたの思考を整理するきっかけになれば嬉しいです。
-                </p>
-              </div>
-            </div>
-          </div> */}
-          
           {/* 関連図書 */}
           {relatedArticles.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-semibold mb-6">関連図書</h2>
+            <section className="mt-16">
+              <h2 className="text-2xl font-bold mb-8">関連する図書</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedArticles.map((relatedArticle) => (
                   <ArticleCard
@@ -146,13 +227,13 @@ export default async function PostPage({ params }: PostPageProps) {
                   />
                 ))}
               </div>
-            </div>
+            </section>
           )}
         </article>
       </div>
     );
   } catch (error) {
-    console.error('図書ページエラー:', error);
+    console.error('図書ページの読み込みエラー:', error);
     notFound();
   }
-} 
+}
