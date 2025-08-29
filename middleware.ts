@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { SecurityMonitor } from '@/lib/utils/security'
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -7,6 +8,17 @@ export async function middleware(request: NextRequest) {
       headers: request.headers,
     },
   })
+
+  // セキュリティ監視
+  if (process.env.NODE_ENV === 'production') {
+    const securityMonitor = SecurityMonitor.getInstance();
+    const url = request.url;
+    const userAgent = request.headers.get('user-agent') || '';
+    const referer = request.headers.get('referer') || '';
+
+    // 疑わしいリクエストの検出
+    securityMonitor.detectSuspiciousRequest(url, userAgent, referer);
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

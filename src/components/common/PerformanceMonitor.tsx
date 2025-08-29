@@ -53,6 +53,8 @@ export function PerformanceMonitor() {
     }
   }, [metrics, bundleInfo, memoryInfo]);
 
+
+
   // このコンポーネントは何もレンダリングしない
   return null;
 }

@@ -75,6 +75,21 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          id: string
+          role: string | null
+        }
+        Insert: {
+          id?: string
+          role?: string | null
+        }
+        Update: {
+          id?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           allow_comments: boolean

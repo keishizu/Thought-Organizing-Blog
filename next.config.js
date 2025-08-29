@@ -1,3 +1,5 @@
+const { generateSecurityHeaders } = require('./security-headers');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -34,6 +36,8 @@ const nextConfig = {
   },
   // セキュリティヘッダー
   async headers() {
+    const securityHeaders = generateSecurityHeaders();
+    
     return [
       {
         source: '/(.*)',
@@ -55,6 +59,11 @@ const nextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
+          // 動的に生成されたセキュリティヘッダー（CSPを含む）
+          ...Object.entries(securityHeaders).map(([key, value]) => ({
+            key,
+            value,
+          })),
         ],
       },
       // 静的アセットのキャッシュ設定

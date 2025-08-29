@@ -372,6 +372,12 @@
   }
 }
 
+@layer utilities {
+  .font-secondary {
+    font-family: var(--font-secondary);
+  }
+}
+
 /* --- Toast Custom Style --- */
 .toast-custom {
   background: #fff;

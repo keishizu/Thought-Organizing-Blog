@@ -272,7 +272,7 @@ export default function PostsList() {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="article-card-title text-xl font-semibold line-clamp-2" style={{ fontFamily: 'var(--font-secondary)' }}>
+                        <h3 className="article-card-title text-xl font-semibold line-clamp-2 font-secondary">
                           {post.title}
                         </h3>
                         {post.is_recommended && (

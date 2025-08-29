@@ -199,7 +199,7 @@ export default function AccountPage() {
                 <Shield size={28} className="text-primary" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>アカウント情報</h3>
+                <h3 className="text-2xl font-bold text-gray-900 font-secondary">アカウント情報</h3>
                 <p className="text-base text-gray-600">現在のアカウント情報</p>
               </div>
             </div>
@@ -237,7 +237,7 @@ export default function AccountPage() {
                   <User size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>管理者名</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 font-secondary">管理者名</h3>
                   <p className="text-base text-gray-600">表示される管理者名を設定します</p>
                 </div>
               </div>
@@ -278,7 +278,7 @@ export default function AccountPage() {
                   <div className="space-y-4">
                     <div className="p-4 bg-gray-50 rounded-xl">
                       <Label className="text-sm font-medium text-gray-600">現在の管理者名</Label>
-                      <p className="text-xl font-semibold mt-2 text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>
+                      <p className="text-xl font-semibold mt-2 text-gray-900 font-secondary">
                         {adminName}
                       </p>
                     </div>
@@ -302,7 +302,7 @@ export default function AccountPage() {
                   <Camera size={28} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-secondary)' }}>プロフィール画像</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 font-secondary">プロフィール画像</h3>
                   <p className="text-base text-gray-600">管理者のトップ画像を設定します</p>
                 </div>
               </div>
@@ -312,7 +312,7 @@ export default function AccountPage() {
                   <div className="relative">
                     <Avatar className="w-32 h-32 border-4 border-primary/10">
                       <AvatarImage src={profileImage || undefined} alt="プロフィール画像" />
-                      <AvatarFallback className="text-4xl font-semibold" style={{ fontFamily: 'var(--font-secondary)' }}>
+                      <AvatarFallback className="text-4xl font-semibold font-secondary">
                         {adminName.charAt(0)}
                       </AvatarFallback>
                     </Avatar>

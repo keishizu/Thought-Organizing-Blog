@@ -41,7 +41,7 @@ export default function PrivacyPage() {
           <div className="card-base p-8">
             <div className="prose prose-gray max-w-none">
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   1. 基本方針
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   2. 収集する個人情報
                 </h2>
                 <div className="space-y-4">
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   3. 個人情報の利用目的
                 </h2>
                 <ul className="list-disc list-inside space-y-2 text-gray-700 leading-relaxed">
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   4. 個人情報の第三者提供
                 </h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   5. アクセス解析ツールについて
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-secondary)' }}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 font-secondary">
                   6. プライバシーポリシーの変更
                 </h2>
                 <p className="text-gray-700 leading-relaxed">

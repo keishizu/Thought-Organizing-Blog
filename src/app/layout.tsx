@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import Layout from '@/components/layout/Layout';
 import { PerformanceMonitor } from '@/components/common/PerformanceMonitor';
+import { ErrorLoggerProvider } from '@/components/common/ErrorLogger';
 
 export const metadata: Metadata = {
   title: '思整図書館 - 思考を整える、静かな空間。',
@@ -50,10 +51,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <Layout>
-          {children}
-        </Layout>
-        <PerformanceMonitor />
+        <ErrorLoggerProvider>
+          <Layout>
+            {children}
+          </Layout>
+          <PerformanceMonitor />
+        </ErrorLoggerProvider>
       </body>
     </html>
   );

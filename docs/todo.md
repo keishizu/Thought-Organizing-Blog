@@ -160,17 +160,17 @@
 - [x] sitemap.xmlの生成・設定
 
 ### 7.5 パフォーマンス最適化
-- [ ] Lighthouse スコアの確認と改善
-- [ ] Core Web Vitalsの最適化
-- [ ] 画像の遅延読み込み確認
-- [ ] バンドルサイズの最適化
-- [ ] キャッシュ戦略の確認
+- [x] Lighthouse スコアの確認と改善
+- [x] Core Web Vitalsの最適化
+- [x] 画像の遅延読み込み確認
+- [x] バンドルサイズの最適化
+- [x] キャッシュ戦略の確認
 
 ### 7.6 セキュリティ・監視
-- [ ] セキュリティヘッダーの設定確認
-- [ ] CSP（Content Security Policy）の設定
-- [ ] 本番環境でのエラーログ監視設定
-- [ ] 本番環境でのパフォーマンス監視設定
+- [x] セキュリティヘッダーの設定確認
+- [x] CSP（Content Security Policy）の設定
+- [x] 本番環境でのエラーログ監視設定
+- [x] 本番環境でのパフォーマンス監視設定
 
 ### 7.7 最終確認・テスト
 - [ ] 本番環境での全機能動作確認
@@ -193,9 +193,38 @@
 
 ---
 
-## フェーズ9：検索＆回遊導線の実装（おまけ）
+## フェーズ9：検索＆回遊導線の実装
 - [ ] トップページに検索フォーム設置（自由入力対応）
 - [ ] `/search?q=キーワード` の検索結果ページ実装
 - [ ] タグクリック時に `/tags/[slug]` に遷移するタグ別一覧ページ実装
 - [ ] タグ付き図書のフィルタ＆導線の最適化
 - [ ] （任意）タグクラウド or 人気タグ表示UIの検討
+
+### 9.x CSP厳格化対応（将来対応・段階的に実施）
+- [ ] nonce配線の基盤実装（厳格CSP運用の前提）
+  - [ ] `middleware.ts` でリクエスト毎に `nonce` 生成
+  - [ ] `request headers` 経由で `app/layout.tsx` に `nonce` を受け渡し
+  - [ ] `<style nonce={...}>` を使えるヘルパ/プロバイダ作成
+  - [ ] `security-headers.js` を更新し、`style-src` に `nonce-<dynamic>` を許可（`'unsafe-inline'` は未使用）
+  - [ ] Report-Only で検証、問題なければ本番適用
+
+- [ ] 動的style排除（クラス切替 or nonce付き<style>注入へ移行）
+  - [ ] `src/components/ui/progress.tsx` の `transform` をクラス/ルール注入に置換
+  - [ ] `src/components/ui/chart.tsx` の `style` オブジェクトをルール注入に置換
+  - [ ] `src/components/common/PerformanceOptimizer.tsx` の `opacity/height/position/transform/overflow` をルール注入・クラス切替で再設計
+  - [ ] スクロール/仮想リストの再描画時にCSSルールをバッチ更新（パフォーマンス確保）
+
+- [ ] ルール注入の実装詳細
+  - [ ] `<style nonce>` ノードを1つだけ保持し、CSS文字列を差し替え（重複増殖の防止）
+  - [ ] セレクタは `data-*` 属性 or 安全な固有IDでスコープ
+  - [ ] 大量ノード更新時は文字列連結で一括反映（reflowコスト最小化）
+
+- [ ] 段階移行の運用
+  - [ ] 現行：`style-src` の `'unsafe-inline'` を暫定許可（安定稼働）
+  - [ ] 各コンポーネントの移行完了ごとにCSP違反が0であることを確認
+  - [ ] 最終段：`'unsafe-inline'` をCSPから削除し、`nonce` のみで本番運用
+
+- [ ] E2E/監視
+  - [ ] Lighthouse/Best Practices でCSPエラーが無いことを確認
+  - [ ] 主要ページでCSP違反ログが出ないことを手動/自動テストで検証
+  - [ ] 回帰テスト（スクロール・仮想リスト・チャート表示のパフォーマンス劣化が無い）
