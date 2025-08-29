@@ -1,0 +1,39 @@
+# テストファイル
+tests/
+**/*.test.*
+**/*.spec.*
+**/setup.ts
+
+# 開発用ファイル
+.env.local
+.env.development
+.env.test
+
+# 開発ツール
+.cursor/
+.vscode/
+.idea/
+
+# ビルド成果物
+.next/
+out/
+dist/
+
+# ログファイル
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 依存関係（Vercelで再インストール）
+node_modules/
+
+# Git関連
+.git/
+.gitignore
+
+# その他
+README.md
+*.md
+.DS_Store
+Thumbs.db

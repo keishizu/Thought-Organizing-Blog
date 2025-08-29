@@ -5,16 +5,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // 画像最適化を有効化
-  images: { 
-    unoptimized: false,
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  },
-  // 圧縮を有効化
-  compress: true,
-  // パフォーマンス最適化
+  // テストファイルをビルドから除外
   experimental: {
     optimizePackageImports: [
       '@radix-ui/react-icons', 
@@ -34,6 +25,15 @@ const nextConfig = {
       '@radix-ui/react-toast',
     ],
   },
+  // 画像最適化を有効化
+  images: { 
+    unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  // 圧縮を有効化
+  compress: true,
   // セキュリティヘッダー
   async headers() {
     const securityHeaders = generateSecurityHeaders();
@@ -89,6 +89,16 @@ const nextConfig = {
   },
   // Webpack設定の最適化
   webpack: (config, { dev, isServer }) => {
+    // テストファイルをビルドから除外
+    if (!dev) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // テストファイルを除外
+        '^./tests/': false,
+        '^../tests/': false,
+      };
+    }
+    
     if (!dev && !isServer) {
       // 本番ビルドでの最適化
       config.optimization.splitChunks = {
