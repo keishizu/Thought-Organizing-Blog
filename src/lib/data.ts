@@ -81,23 +81,46 @@ export async function getPublishedArticles(): Promise<Article[]> {
       return [];
     }
 
-    return (data || []).map((post: any) => ({
-      id: post.id,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      category: post.category,
-      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }) : '日付不明',
-      author: '管理者',
-      imageUrl: post.image_url || undefined,
-      likes: post.likes || 0,
-      readTime: calculateReadTimeFromHTML(post.content),
-      tags: post.tags || [],
-    }));
+    // データが存在しない場合の処理
+    if (!data || !Array.isArray(data)) {
+      console.warn('図書データが取得できませんでした');
+      return [];
+    }
+
+    return data
+      .filter((post: any) => {
+        // 必須フィールドの存在確認
+        return post && 
+               typeof post.id === 'string' && 
+               typeof post.title === 'string' && 
+               typeof post.excerpt === 'string' && 
+               typeof post.content === 'string' && 
+               typeof post.category === 'string';
+      })
+      .map((post: any) => {
+        // null値の適切な処理
+        const content = post.content || '';
+        const created_at = post.created_at || new Date().toISOString();
+        const tags = Array.isArray(post.tags) ? post.tags : [];
+        
+        return {
+          id: post.id || '',
+          title: post.title || 'タイトルなし',
+          excerpt: post.excerpt || '概要なし',
+          content: content,
+          category: post.category || '未分類',
+          date: created_at ? new Date(created_at).toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) : '日付不明',
+          author: '管理者',
+          imageUrl: post.image_url || undefined,
+          likes: typeof post.likes === 'number' ? post.likes : 0,
+          readTime: content ? calculateReadTimeFromHTML(content) : '0分',
+          tags: tags,
+        };
+      });
   } catch (error) {
     // エラーの詳細をログに出力
     if (error instanceof Error) {
@@ -140,23 +163,46 @@ export async function getRecommendedArticles(): Promise<Article[]> {
       return [];
     }
 
-    return (data || []).map((post: any) => ({
-      id: post.id,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      category: post.category,
-      date: post.created_at ? new Date(post.created_at).toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }) : '日付不明',
-      author: '管理者',
-      imageUrl: post.image_url || undefined,
-      likes: post.likes || 0,
-      readTime: calculateReadTimeFromHTML(post.content),
-      tags: post.tags || [],
-    }));
+    // データが存在しない場合の処理
+    if (!data || !Array.isArray(data)) {
+      console.warn('おすすめ図書データが取得できませんでした');
+      return [];
+    }
+
+    return data
+      .filter((post: any) => {
+        // 必須フィールドの存在確認
+        return post && 
+               typeof post.id === 'string' && 
+               typeof post.title === 'string' && 
+               typeof post.excerpt === 'string' && 
+               typeof post.content === 'string' && 
+               typeof post.category === 'string';
+      })
+      .map((post: any) => {
+        // null値の適切な処理
+        const content = post.content || '';
+        const created_at = post.created_at || new Date().toISOString();
+        const tags = Array.isArray(post.tags) ? post.tags : [];
+        
+        return {
+          id: post.id || '',
+          title: post.title || 'タイトルなし',
+          excerpt: post.excerpt || '概要なし',
+          content: content,
+          category: post.category || '未分類',
+          date: created_at ? new Date(created_at).toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) : '日付不明',
+          author: '管理者',
+          imageUrl: post.image_url || undefined,
+          likes: typeof post.likes === 'number' ? post.likes : 0,
+          readTime: content ? calculateReadTimeFromHTML(content) : '0分',
+          tags: tags,
+        };
+      });
   } catch (error) {
     // エラーの詳細をログに出力
     if (error instanceof Error) {

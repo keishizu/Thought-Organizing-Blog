@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Brain, Compass, Eye } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import CategorySection from '@/components/blog/CategorySection';
+import ErrorFallback from '@/components/ui/error-fallback';
 import { getPublishedArticles, getRecommendedArticles } from '@/lib/data';
 
 // キャッシュを無効化し、常に最新のデータを取得

@@ -8,6 +8,16 @@ function generateCSPPolicy() {
   const isProd = process.env.NODE_ENV === 'production';
   const useVercelAnalytics = getBooleanEnv('USE_VERCEL_ANALYTICS');
   const allowVercelLive = getBooleanEnv('ALLOW_VERCEL_LIVE');
+  const reportOnlyCSP = getBooleanEnv('REPORT_ONLY_CSP');
+
+  // 環境変数の状態をログ出力
+  console.log('CSP設定情報:', {
+    NODE_ENV: process.env.NODE_ENV,
+    isProd,
+    REPORT_ONLY_CSP: reportOnlyCSP,
+    USE_VERCEL_ANALYTICS: useVercelAnalytics,
+    ALLOW_VERCEL_LIVE: allowVercelLive
+  });
 
   const policies = [
     "default-src 'self'",

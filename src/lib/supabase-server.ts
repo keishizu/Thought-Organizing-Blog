@@ -13,7 +13,23 @@ export async function createServerSupabaseClient() {
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     
     if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error('Supabase環境変数が設定されていません。NEXT_PUBLIC_SUPABASE_URLとNEXT_PUBLIC_SUPABASE_ANON_KEYを確認してください。')
+      const missingVars = [];
+      if (!supabaseUrl) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
+      if (!supabaseAnonKey) missingVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+      
+      throw new Error(`Supabase環境変数が設定されていません: ${missingVars.join(', ')}`)
+    }
+    
+    // URLの形式確認
+    try {
+      new URL(supabaseUrl);
+    } catch {
+      throw new Error('NEXT_PUBLIC_SUPABASE_URLの形式が正しくありません');
+    }
+    
+    // キーの形式確認（JWTトークンの形式）
+    if (!supabaseAnonKey.startsWith('eyJ')) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEYの形式が正しくありません');
     }
     
     return createServerClient<Database>(
@@ -37,7 +53,18 @@ export async function createServerSupabaseClient() {
       }
     )
   } catch (error) {
-    console.error('Supabaseクライアント初期化エラー:', error)
+    // エラーの詳細をログに出力
+    if (error instanceof Error) {
+      console.error('Supabaseクライアント初期化エラー:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+    } else {
+      console.error('Supabaseクライアント初期化エラー（不明なエラー）:', error);
+    }
+    
+    // エラーを再スローして上位で処理できるようにする
     throw error
   }
 }
