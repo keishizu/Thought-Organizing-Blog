@@ -58,6 +58,9 @@ SMTP_HOST=your_smtp_host
 SMTP_PORT=your_smtp_port
 SMTP_USER=your_smtp_user
 SMTP_PASS=your_smtp_password
+
+# Google Tag Manager設定
+NEXT_PUBLIC_GTM_ID=GTM-xxxxxxx
 ```
 
 ### 3. Supabaseプロジェクトの設定
@@ -242,6 +245,54 @@ npm run lint
 - 画像ファイルのサイズ制限は5MBです
 - インポート可能なファイルサイズは10MBまでです
 - 本番環境では適切なセキュリティ設定を行ってください
+
+## Google Tag Manager (GTM) 設定
+
+### 概要
+このプロジェクトには Google Tag Manager (GTM) が統合されており、GTM ID: `GTM-5NXSS574` で設定されています。
+
+### 実装内容
+- **開始タグ**: `<head>` 内の上部に配置
+- **noscript タグ**: `<body>` の直後に配置
+- **自動ページビュートラッキング**: ルート変更時に自動で `page_view` イベントを送信
+- **CSP 設定**: `security-headers.js` で GTM ドメインを許可
+
+### 検証方法
+
+#### 1. ブラウザでの確認
+1. 開発者ツール（F12）を開く
+2. Console タブで CSP エラーがないことを確認
+3. Network タブで `gtm.js` が正常に読み込まれていることを確認
+
+#### 2. GTM プレビューモードでの確認
+1. [Google Tag Manager](https://tagmanager.google.com/) にアクセス
+2. プレビューモードを有効化
+3. サイトにアクセスしてイベントが正しく送信されていることを確認
+
+#### 3. データレイヤーの確認
+1. ブラウザのコンソールで以下を実行：
+```javascript
+console.log(window.dataLayer);
+```
+2. `gtm.js` イベントと `page_view` イベントが含まれていることを確認
+
+### カスタムイベントの送信
+必要に応じて、以下のようにカスタムイベントを送信できます：
+
+```typescript
+import { trackEvent } from '@/lib/gtm';
+
+// ボタンクリックイベントの例
+trackEvent('button_click', {
+  button_name: 'submit',
+  page_location: '/contact'
+});
+```
+
+### トラブルシューティング
+- **CSP エラーが発生する場合**: `security-headers.js` の設定を確認
+- **イベントが送信されない場合**: GTM の設定とデータレイヤーの状態を確認
+- **noscript タグが表示される場合**: JavaScript が無効になっている可能性
 
 ## ライセンス
 

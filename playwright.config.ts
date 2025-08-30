@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'html',
   
   use: {
-    baseURL: 'https://thought-organizing-blog.vercel.app',
+    baseURL: 'http://localhost:3000', // ローカル環境用に変更
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     // タイムアウトを長めに設定（本番環境用）
@@ -17,16 +17,37 @@ export default defineConfig({
     navigationTimeout: 30000,
   },
 
-  // Chromiumのみを使用
+  // 複数ブラウザとモバイルデバイスでのテスト
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'Mobile Safari',
+      use: { ...devices['iPhone 12'] },
+    },
   ],
 
-  // 本番環境用の設定
-  webServer: undefined,
+  // ローカル環境用の設定
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
   
   // テストタイムアウトを長めに設定
   timeout: 60000,

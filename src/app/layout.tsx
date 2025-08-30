@@ -1,8 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Layout from '@/components/layout/Layout';
 import { PerformanceMonitor } from '@/components/common/PerformanceMonitor';
 import { ErrorLoggerProvider } from '@/components/common/ErrorLogger';
+import { GTMAnalytics } from '@/components/common/analytics/GTMAnalytics';
 
 export const metadata: Metadata = {
   title: '思整図書館 - 思考を整える、静かな空間。',
@@ -42,6 +44,18 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5NXSS574');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
+        
         {/* DNSプリフェッチ */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
@@ -51,11 +65,25 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5NXSS574"
+            height="0" 
+            width="0" 
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
+        
         <ErrorLoggerProvider>
           <Layout>
             {children}
           </Layout>
           <PerformanceMonitor />
+          <Suspense fallback={null}>
+            <GTMAnalytics />
+          </Suspense>
         </ErrorLoggerProvider>
       </body>
     </html>
