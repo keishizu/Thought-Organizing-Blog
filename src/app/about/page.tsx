@@ -122,7 +122,7 @@ export default function AboutPage() {
                     </li>
                     <li className="flex items-start">
                       <span className="inline-block w-2 h-2 bg-primary rounded-full mr-3 mt-2 flex-shrink-0"></span>
-                      自分の気持ちや考えを言葉にするのが苦手だと感じている人
+                      自分の気持ちや考えを言葉にするのが苦手な人
                     </li>
                     <li className="flex items-start">
                       <span className="inline-block w-2 h-2 bg-primary rounded-full mr-3 mt-2 flex-shrink-0"></span>

@@ -5,6 +5,7 @@ import { getPublishedArticleById, getPublishedArticles } from '@/lib/data';
 import ArticleCard from '@/components/blog/ArticleCard';
 import LikeButton from '@/components/likes/LikeButton';
 import CommentSection from '@/components/comments/CommentSection';
+import SafeHtmlRenderer from '@/components/common/SafeHtmlRenderer';
 import { Metadata } from 'next';
 
 // キャッシュを無効化し、常に最新のデータを取得
@@ -185,7 +186,10 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="prose prose-lg max-w-none mb-12">
             <div className="text-gray-700 leading-relaxed space-y-6 article-content">
               {article.content && (
-                <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                <SafeHtmlRenderer 
+                  html={article.content}
+                  className=""
+                />
               )}
             </div>
           </div>

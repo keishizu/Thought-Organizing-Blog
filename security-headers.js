@@ -9,7 +9,7 @@ function generateNonce() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
-function generateCSPPolicy() {
+function generateCSPPolicy(requestNonce) {
   const isProd = process.env.NODE_ENV === 'production';
   const useVercelAnalytics = getBooleanEnv('USE_VERCEL_ANALYTICS');
   const allowVercelLive = getBooleanEnv('ALLOW_VERCEL_LIVE');
@@ -23,7 +23,8 @@ function generateCSPPolicy() {
     REPORT_ONLY_CSP: reportOnlyCSP,
     USE_VERCEL_ANALYTICS: useVercelAnalytics,
     ALLOW_VERCEL_LIVE: allowVercelLive,
-    USE_CSP_NONCE: useNonce
+    USE_CSP_NONCE: useNonce,
+    hasRequestNonce: !!requestNonce
   });
 
   const policies = [
@@ -32,20 +33,29 @@ function generateCSPPolicy() {
 
   const scriptSrc = ["'self'"];
   
-  if (useNonce) {
-    // nonce ベースの CSP（推奨）
-    const nonce = generateNonce();
-    scriptSrc.push(`'nonce-${nonce}'`);
+  if (useNonce && requestNonce) {
+    // middlewareから渡されたnonceを使用
+    scriptSrc.push(`'nonce-${requestNonce}'`);
     // nonce をグローバルに保存（GTM コンポーネントで使用）
-    global.cspNonce = nonce;
-  } else {
-    // 従来の unsafe-inline ベース
+    global.cspNonce = requestNonce;
+    // 本番環境では unsafe-inline を完全に削除、開発環境でのみ許可
     if (!isProd) {
       scriptSrc.push("'unsafe-inline'", "'unsafe-eval'");
-    } else {
-      // 本番環境では GTM の inline スクリプトのみ許可
-      scriptSrc.push("'unsafe-inline'");
     }
+  } else if (useNonce) {
+    // fallback: 独自生成
+    const nonce = generateNonce();
+    scriptSrc.push(`'nonce-${nonce}'`);
+    global.cspNonce = nonce;
+    if (!isProd) {
+      scriptSrc.push("'unsafe-inline'", "'unsafe-eval'");
+    }
+  } else {
+    // 従来の unsafe-inline ベース（非推奨：本番環境では使用しない）
+    if (!isProd) {
+      scriptSrc.push("'unsafe-inline'", "'unsafe-eval'");
+    }
+    // 本番環境では unsafe-inline を完全に削除
   }
   
   if (useVercelAnalytics) {
@@ -56,7 +66,24 @@ function generateCSPPolicy() {
   policies.push(`script-src ${scriptSrc.join(' ')}`);
 
   const styleSrc = ["'self'", 'https://fonts.googleapis.com'];
-  if (!isProd || !useNonce) {
+  if (useNonce && requestNonce) {
+    // middlewareから渡されたnonceを使用
+    styleSrc.push(`'nonce-${requestNonce}'`);
+    // nonce をグローバルに保存（style コンポーネントで使用）
+    global.cspStyleNonce = requestNonce;
+    // 本番環境では unsafe-inline を完全に削除
+    if (!isProd) {
+      styleSrc.push("'unsafe-inline'");
+    }
+  } else if (useNonce) {
+    // fallback: 独自生成
+    const styleNonce = generateNonce();
+    styleSrc.push(`'nonce-${styleNonce}'`);
+    global.cspStyleNonce = styleNonce;
+    if (!isProd) {
+      styleSrc.push("'unsafe-inline'");
+    }
+  } else if (!isProd) {
     styleSrc.push("'unsafe-inline'");
   }
   policies.push(`style-src ${styleSrc.join(' ')}`);
@@ -101,7 +128,7 @@ function generateCSPPolicy() {
   return policies.join('; ');
 }
 
-function generateSecurityHeaders() {
+function generateSecurityHeaders(requestNonce) {
   const headers = {};
   
   // Strict-Transport-Security は本番環境でのみ設定
@@ -113,7 +140,7 @@ function generateSecurityHeaders() {
   headers['X-XSS-Protection'] = '1; mode=block';
   headers['Referrer-Policy'] = 'origin-when-cross-origin';
 
-  const csp = generateCSPPolicy();
+  const csp = generateCSPPolicy(requestNonce);
   const reportOnly = getBooleanEnv('REPORT_ONLY_CSP');
   const headerName = reportOnly ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
   headers[headerName] = csp;

@@ -12,13 +12,18 @@ export function PerformanceMonitor() {
     // 画像の遅延読み込み最適化
     optimizeImageLoading();
 
+    // パフォーマンスログが無効化されていない場合のみ実行
+    const isLoggingDisabled = process.env.NEXT_PUBLIC_DISABLE_PERFORMANCE_LOGS === 'true';
+
     // パフォーマンスデータのログ出力（開発環境のみ）
-    if (process.env.NODE_ENV === 'development' && metrics) {
+    // 一時的に無効化: コンソール表示を無効にしたい場合は以下の行をコメントアウト
+    if (process.env.NODE_ENV === 'development' && metrics && !isLoggingDisabled) {
       logPerformanceData(metrics);
     }
 
     // パフォーマンス警告の表示（開発環境のみ）
-    if (process.env.NODE_ENV === 'development') {
+    // 一時的に無効化: コンソール表示を無効にしたい場合は以下の行をコメントアウト
+    if (process.env.NODE_ENV === 'development' && !isLoggingDisabled) {
       if (metrics) {
         const warnings = [];
         if (metrics.fcp > 1800) warnings.push('FCPが1800msを超えています');

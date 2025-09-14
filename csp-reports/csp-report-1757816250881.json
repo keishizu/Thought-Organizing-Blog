@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-09-14T02:17:30.881Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+  "report": {
+    "csp-report": {
+      "document-uri": "http://localhost:3000/articles/3f8d2d4e-ca7d-4e04-8094-cbeb7c3ad1e9",
+      "referrer": "",
+      "violated-directive": "script-src",
+      "effective-directive": "script-src",
+      "original-policy": "default-src 'self'; script-src 'self' 'nonce-0q9svars89gvdhkepoww09' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com 'nonce-f5eiyxtqw8f8psddouuk3v'; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://qprlaprnzqewcgpcvzme.supabase.co wss://qprlaprnzqewcgpcvzme.supabase.co https://www.googletagmanager.com; frame-src 'self' https://www.googletagmanager.com; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; manifest-src 'self'; report-uri /api/csp-report",
+      "disposition": "report",
+      "blocked-uri": "eval",
+      "line-number": 18,
+      "column-number": 26,
+      "source-file": "http://localhost:3000/_next/static/webpack/app/layout.c82a1bbbe2eec5ea.hot-update.js",
+      "status-code": 200,
+      "script-sample": ""
+    }
+  }
+}

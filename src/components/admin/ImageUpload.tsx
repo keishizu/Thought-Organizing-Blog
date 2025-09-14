@@ -46,7 +46,9 @@ export default function ImageUpload({
     try {
       const uploadedUrl = await uploadImage(file)
       
-      console.log('Uploaded URL:', uploadedUrl)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Uploaded URL:', uploadedUrl);
+      }
       
       onImageChange(uploadedUrl)
     } catch (err) {

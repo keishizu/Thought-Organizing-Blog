@@ -51,7 +51,9 @@ const MenuBar = ({ editor }: { editor: any }) => {
   }
 
   // デバッグ用：コンソールにボタンの状態を出力
-  console.log('MenuBar rendered, Heading1 icon:', Heading1)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('MenuBar rendered, Heading1 icon:', Heading1);
+  }
 
   return (
     <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1">

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useComponentCSSRule } from '@/lib/css-rule-manager';
 
 interface LazyImageProps {
   src: string;
@@ -17,6 +18,23 @@ export function LazyImage({ src, alt, width, height, className, priority = false
     triggerOnce: true,
     rootMargin: '50px 0px',
   });
+  
+  // React.useId()を使用してSSR対応のIDを生成
+  const reactId = React.useId();
+  const imageId = `lazy-image-${reactId.replace(/:/g, '-')}`;
+
+  const css = `
+    [data-lazy-image-id="${imageId}"] {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    [data-lazy-image-id="${imageId}"].loaded {
+      opacity: 1;
+    }
+  `;
+
+  // CSSルール管理システムを使用
+  useComponentCSSRule(`lazy-image-${imageId}`, css);
 
   if (priority) {
     return (
@@ -31,21 +49,34 @@ export function LazyImage({ src, alt, width, height, className, priority = false
     );
   }
 
+  if (!inView) {
+    // 画像がビューに入る前はプレースホルダーを表示
+    return (
+      <div
+        ref={ref}
+        className={`${className} bg-gray-200 flex items-center justify-center`}
+        style={{ width, height }}
+        data-lazy-image-id={imageId}
+      >
+        <span className="text-gray-400 text-sm">Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <img
-      ref={ref}
-      src={inView ? src : ''}
+      src={src}
       alt={alt}
       width={width}
       height={height}
       className={className}
       loading="lazy"
+      data-lazy-image-id={imageId}
       onLoad={(e) => {
         if (e.currentTarget.src) {
-          e.currentTarget.style.opacity = '1';
+          e.currentTarget.classList.add('loaded');
         }
       }}
-      style={{ opacity: 0, transition: 'opacity 0.3s ease-in-out' }}
     />
   );
 }
@@ -67,6 +98,10 @@ export function VirtualizedList<T>({
 }: VirtualizedListProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // React.useId()を使用してSSR対応のIDを生成
+  const reactId = React.useId();
+  const listId = `virtualized-list-${reactId.replace(/:/g, '-')}`;
 
   const totalHeight = items.length * itemHeight;
   const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
@@ -82,16 +117,36 @@ export function VirtualizedList<T>({
     setScrollTop(e.currentTarget.scrollTop);
   };
 
+  const css = `
+    [data-virtualized-list-id="${listId}"] {
+      height: ${containerHeight}px;
+      overflow: auto;
+    }
+    [data-virtualized-list-id="${listId}"] .virtualized-container {
+      height: ${totalHeight}px;
+      position: relative;
+    }
+    [data-virtualized-list-id="${listId}"] .virtualized-items {
+      transform: translateY(${offsetY}px);
+    }
+    [data-virtualized-list-id="${listId}"] .virtualized-item {
+      height: ${itemHeight}px;
+    }
+  `;
+
+  // CSSルール管理システムを使用
+  useComponentCSSRule(`virtualized-list-${listId}`, css);
+
   return (
     <div
       ref={containerRef}
-      style={{ height: containerHeight, overflow: 'auto' }}
+      data-virtualized-list-id={listId}
       onScroll={handleScroll}
     >
-      <div style={{ height: totalHeight, position: 'relative' }}>
-        <div style={{ transform: `translateY(${offsetY}px)` }}>
+      <div className="virtualized-container">
+        <div className="virtualized-items">
           {visibleItems.map((item, index) => (
-            <div key={startIndex + index} style={{ height: itemHeight }}>
+            <div key={startIndex + index} className="virtualized-item">
               {renderItem(item, startIndex + index)}
             </div>
           ))}

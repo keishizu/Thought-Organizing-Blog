@@ -26,7 +26,9 @@ export async function GET(
       .single();
 
     if (fetchError) {
-      console.error("Error fetching post likes count:", fetchError);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching post likes count:", fetchError);
+      }
       return NextResponse.json(
         { error: "Post not found" },
         { status: 404 }
@@ -37,7 +39,9 @@ export async function GET(
       likeCount: post.likes || 0 
     });
   } catch (error) {
-    console.error("Error getting like count:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Error getting like count:", error);
+    }
     return NextResponse.json(
       { error: "Internal Server Error", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

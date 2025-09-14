@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "CSP_REPORT_URI=/api/csp-report REPORT_ONLY_CSP=true USE_CSP_NONCE=true next dev",
+    "dev:quiet": "CSP_REPORT_URI=/api/csp-report REPORT_ONLY_CSP=true USE_CSP_NONCE=false NEXT_PUBLIC_DISABLE_PERFORMANCE_LOGS=true next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

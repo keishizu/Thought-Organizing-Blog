@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-09-14T02:46:51.191Z",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1",
+  "report": {
+    "csp-report": {
+      "document-uri": "http://localhost:3000/about",
+      "referrer": "http://localhost:3000/about",
+      "violated-directive": "style-src-elem",
+      "effective-directive": "style-src-elem",
+      "original-policy": "default-src 'self'; script-src 'self' 'nonce-skemlremsz58o2ck040o9' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com 'nonce-ipy1eq7io637vsbyb8v0k' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://qprlaprnzqewcgpcvzme.supabase.co wss://qprlaprnzqewcgpcvzme.supabase.co https://www.googletagmanager.com; frame-src 'self' https://www.googletagmanager.com; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; manifest-src 'self'; report-uri /api/csp-report",
+      "disposition": "report",
+      "blocked-uri": "inline",
+      "line-number": 541,
+      "column-number": 114544,
+      "source-file": "webpack-internal",
+      "status-code": 200,
+      "script-sample": ""
+    }
+  }
+}

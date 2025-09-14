@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Edit, Eye, Tag } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
+import SafeHtmlRenderer from '@/components/common/SafeHtmlRenderer'
 
 interface PreviewData {
   id: string
@@ -157,7 +158,10 @@ export default function PreviewPage() {
         <div className="prose prose-lg max-w-none mb-12">
           <div className="text-gray-700 leading-relaxed space-y-6 article-content">
             {previewData.content && (
-              <div dangerouslySetInnerHTML={{ __html: previewData.content }} />
+              <SafeHtmlRenderer 
+                html={previewData.content}
+                className=""
+              />
             )}
           </div>
         </div>

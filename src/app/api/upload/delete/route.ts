@@ -47,7 +47,9 @@ export async function POST(request: NextRequest) {
     // ファイルを削除
     try {
       await unlink(filePath)
-      console.log('Deleted file:', filePath)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Deleted file:', filePath);
+      }
     } catch (error) {
       console.error('Failed to delete file:', error)
       return NextResponse.json({ error: 'Failed to delete file' }, { status: 500 })

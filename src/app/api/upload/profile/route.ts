@@ -76,7 +76,9 @@ export async function POST(request: NextRequest) {
           if (filePath.startsWith(join(process.cwd(), 'public', 'uploads', 'profiles'))) {
             if (existsSync(filePath)) {
               await unlink(filePath)
-              console.log('Deleted existing profile image:', filePath)
+              if (process.env.NODE_ENV === 'development') {
+                console.log('Deleted existing profile image:', filePath);
+              }
             }
           }
         }

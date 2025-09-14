@@ -56,7 +56,9 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
           if (!deleteResponse.ok) {
             console.warn('Failed to delete old image:', await deleteResponse.text())
           } else {
-            console.log('Old image deleted successfully')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Old image deleted successfully');
+            }
           }
         } catch (error) {
           console.warn('Error deleting old image:', error)
@@ -140,7 +142,9 @@ export default function EditPostForm({ postId, initialPost }: EditPostFormProps)
           if (!deleteResponse.ok) {
             console.warn('Failed to delete old image:', await deleteResponse.text())
           } else {
-            console.log('Old image deleted successfully')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Old image deleted successfully');
+            }
           }
         } catch (error) {
           console.warn('Error deleting old image:', error)

@@ -7,6 +7,16 @@ import { AlertTriangle, FileQuestion, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TestPages() {
+  // 本番環境では404を表示
+  if (process.env.NODE_ENV === 'production') {
+    return (
+      <div className="container mx-auto p-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">404 - Page Not Found</h1>
+        <p className="text-gray-600">このページは開発環境でのみ利用可能です。</p>
+      </div>
+    );
+  }
+
   const [isLoading, setIsLoading] = useState(false);
 
   const triggerError = () => {

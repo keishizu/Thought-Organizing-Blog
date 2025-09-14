@@ -4,6 +4,19 @@ import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { LikeStatus } from "@/types/like";
 
+// デバッグログを出力する関数（開発環境でのみ）
+function debugLog(message: string, ...args: any[]) {
+  // 本番環境では一切ログを出力しない
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(message, ...args);
+  }
+}
+
+// エラーログを出力する関数（本番環境でも出力）
+function errorLog(message: string, ...args: any[]) {
+  console.error(message, ...args);
+}
+
 interface LikeButtonProps {
   postId: string;
   initialLikeCount: number;
@@ -51,28 +64,28 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
 
     const checkLikeStatus = async () => {
       try {
-        console.log("Checking initial like status for:", { postId, anonymousUserId });
+        debugLog("Checking initial like status for:", { postId, anonymousUserId });
         const response = await fetch(`/api/likes?postId=${postId}&userId=${anonymousUserId}`);
         if (response.ok) {
           const data: LikeStatus = await response.json();
-          console.log("Initial like status:", data);
+          debugLog("Initial like status:", data);
           setIsLiked(data.isLiked);
           
           // サーバーから最新のいいね数を取得
           const countResponse = await fetch(`/api/posts/${postId}/likes`);
           if (countResponse.ok) {
             const countData = await countResponse.json();
-            console.log("Initial like count:", countData);
+            debugLog("Initial like count:", countData);
             setLikeCount(countData.likeCount || initialLikeCount);
           } else {
-            console.log("Using initial like count:", initialLikeCount);
+            debugLog("Using initial like count:", initialLikeCount);
             setLikeCount(initialLikeCount);
           }
         } else {
-          console.error("Failed to check initial like status:", response.status, response.statusText);
+          errorLog("Failed to check initial like status:", response.status, response.statusText);
         }
       } catch (error) {
-        console.error("Error checking like status:", error);
+        errorLog("Error checking like status:", error);
       }
     };
 
@@ -88,7 +101,7 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
       if (isLiked) {
         // いいねを削除
         const requestData = { postId, userId: anonymousUserId };
-        console.log("Sending DELETE request with data:", requestData);
+        debugLog("Sending DELETE request with data:", requestData);
         const response = await fetch("/api/likes", {
           method: "DELETE",
           headers: {
@@ -99,49 +112,49 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
 
         if (response.ok) {
           const result = await response.json();
-          console.log("DELETE /api/likes - Response received:", result);
+          debugLog("DELETE /api/likes - Response received:", result);
           setIsLiked(false);
           // サーバーから最新のカウントを取得
           if (result.updatedLikeCount !== undefined) {
-            console.log("Setting like count to:", result.updatedLikeCount);
+            debugLog("Setting like count to:", result.updatedLikeCount);
             setLikeCount(result.updatedLikeCount);
           } else {
-            console.log("No updatedLikeCount in response, fetching from server");
+            debugLog("No updatedLikeCount in response, fetching from server");
             // サーバーから最新のカウントを再取得
             const countResponse = await fetch(`/api/posts/${postId}/likes`);
             if (countResponse.ok) {
               const countData = await countResponse.json();
-              console.log("Fetched updated like count:", countData);
+              debugLog("Fetched updated like count:", countData);
               setLikeCount(countData.likeCount || 0);
             } else {
-              console.log("Using fallback count");
+              debugLog("Using fallback count");
               setLikeCount(prev => Math.max(prev - 1, 0));
             }
           }
         } else {
-          console.error("Failed to remove like - Status:", response.status, response.statusText);
-          console.error("Request data:", { postId, userId: anonymousUserId });
-          console.error("Request data types:", { 
+          errorLog("Failed to remove like - Status:", response.status, response.statusText);
+          errorLog("Request data:", { postId, userId: anonymousUserId });
+          errorLog("Request data types:", { 
             postIdType: typeof postId, 
             userIdType: typeof anonymousUserId,
             postIdValue: postId,
             userIdValue: anonymousUserId
           });
           const errorData = await response.json().catch((parseError) => {
-            console.error("Failed to parse error response:", parseError);
+            errorLog("Failed to parse error response:", parseError);
             return { parseError: parseError.message };
           });
-          console.error("Failed to remove like - Error data:", errorData);
-          console.error("Response headers:", Object.fromEntries(response.headers.entries()));
+          errorLog("Failed to remove like - Error data:", errorData);
+          errorLog("Response headers:", Object.fromEntries(response.headers.entries()));
           
           // 削除エラーの場合、状態を更新
           if (errorData.error) {
-            console.log("Remove like error - updating state to false");
+            debugLog("Remove like error - updating state to false");
             setIsLiked(false);
             
             // "Like not found"エラーの場合、特別な処理
             if (errorData.error === "Like not found") {
-              console.log("Like not found - already not liked");
+              debugLog("Like not found - already not liked");
             }
             
             // サーバーの状態を再確認
@@ -149,18 +162,18 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
               const checkResponse = await fetch(`/api/likes?postId=${postId}&userId=${anonymousUserId}`);
               if (checkResponse.ok) {
                 const checkData = await checkResponse.json();
-                console.log("Re-checking like status after delete error:", checkData);
+                debugLog("Re-checking like status after delete error:", checkData);
                 setIsLiked(checkData.isLiked);
               }
             } catch (checkError) {
-              console.error("Error re-checking like status after delete error:", checkError);
+              errorLog("Error re-checking like status after delete error:", checkError);
             }
           }
         }
       } else {
         // いいねを追加
         const requestData = { postId, userId: anonymousUserId };
-        console.log("Sending POST request with data:", requestData);
+        debugLog("Sending POST request with data:", requestData);
         const response = await fetch("/api/likes", {
           method: "POST",
           headers: {
@@ -171,44 +184,44 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
 
         if (response.ok) {
           const result = await response.json();
-          console.log("POST /api/likes - Response received:", result);
+          debugLog("POST /api/likes - Response received:", result);
           setIsLiked(true);
           // サーバーから最新のカウントを取得
           if (result.updatedLikeCount !== undefined) {
-            console.log("Setting like count to:", result.updatedLikeCount);
+            debugLog("Setting like count to:", result.updatedLikeCount);
             setLikeCount(result.updatedLikeCount);
           } else {
-            console.log("No updatedLikeCount in response, fetching from server");
+            debugLog("No updatedLikeCount in response, fetching from server");
             // サーバーから最新のカウントを再取得
             const countResponse = await fetch(`/api/posts/${postId}/likes`);
             if (countResponse.ok) {
               const countData = await countResponse.json();
-              console.log("Fetched updated like count:", countData);
+              debugLog("Fetched updated like count:", countData);
               setLikeCount(countData.likeCount || 0);
             } else {
-              console.log("Using fallback count");
+              debugLog("Using fallback count");
               setLikeCount(prev => prev + 1);
             }
           }
         } else {
-          console.error("Failed to add like - Status:", response.status, response.statusText);
-          console.error("Request data:", { postId, userId: anonymousUserId });
-          console.error("Request data types:", { 
+          errorLog("Failed to add like - Status:", response.status, response.statusText);
+          errorLog("Request data:", { postId, userId: anonymousUserId });
+          errorLog("Request data types:", { 
             postIdType: typeof postId, 
             userIdType: typeof anonymousUserId,
             postIdValue: postId,
             userIdValue: anonymousUserId
           });
           const errorData = await response.json().catch((parseError) => {
-            console.error("Failed to parse error response:", parseError);
+            errorLog("Failed to parse error response:", parseError);
             return { parseError: parseError.message };
           });
-          console.error("Failed to add like - Error data:", errorData);
-          console.error("Response headers:", Object.fromEntries(response.headers.entries()));
+          errorLog("Failed to add like - Error data:", errorData);
+          errorLog("Response headers:", Object.fromEntries(response.headers.entries()));
           
           // "Already liked"エラーの場合、状態を更新
           if (errorData.error === "Already liked") {
-            console.log("Already liked - updating state to true");
+            debugLog("Already liked - updating state to true");
             setIsLiked(true);
             
             // サーバーの状態を再確認
@@ -216,17 +229,17 @@ export default function LikeButton({ postId, initialLikeCount, userId }: LikeBut
               const checkResponse = await fetch(`/api/likes?postId=${postId}&userId=${anonymousUserId}`);
               if (checkResponse.ok) {
                 const checkData = await checkResponse.json();
-                console.log("Re-checking like status:", checkData);
+                debugLog("Re-checking like status:", checkData);
                 setIsLiked(checkData.isLiked);
               }
             } catch (checkError) {
-              console.error("Error re-checking like status:", checkError);
+              errorLog("Error re-checking like status:", checkError);
             }
           }
         }
       }
     } catch (error) {
-      console.error("Error toggling like:", error);
+      errorLog("Error toggling like:", error);
     } finally {
       setIsLoading(false);
     }

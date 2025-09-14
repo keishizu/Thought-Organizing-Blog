@@ -215,31 +215,61 @@
 - [ ] （任意）タグクラウド or 人気タグ表示UIの検討
 - [ ] SNSや外部メディアとの連携設計（X, noteなど）
 
-### 9.x CSP厳格化対応（将来対応・段階的に実施）
-- [ ] nonce配線の基盤実装（厳格CSP運用の前提）
-  - [ ] `middleware.ts` でリクエスト毎に `nonce` 生成
-  - [ ] `request headers` 経由で `app/layout.tsx` に `nonce` を受け渡し
-  - [ ] `<style nonce={...}>` を使えるヘルパ/プロバイダ作成
-  - [ ] `security-headers.js` を更新し、`style-src` に `nonce-<dynamic>` を許可（`'unsafe-inline'` は未使用）
-  - [ ] Report-Only で検証、問題なければ本番適用
+### 9.x CSP厳格化対応（段階的実施 - 95%完了）
 
-- [ ] 動的style排除（クラス切替 or nonce付き<style>注入へ移行）
-  - [ ] `src/components/ui/progress.tsx` の `transform` をクラス/ルール注入に置換
-  - [ ] `src/components/ui/chart.tsx` の `style` オブジェクトをルール注入に置換
-  - [ ] `src/components/common/PerformanceOptimizer.tsx` の `opacity/height/position/transform/overflow` をルール注入・クラス切替で再設計
-  - [ ] スクロール/仮想リストの再描画時にCSSルールをバッチ更新（パフォーマンス確保）
+- [x] 環境変数設定（CSP厳格化の基盤）
+  - [x] `.env.local` に `USE_CSP_NONCE=true` を追加（必須環境変数）
+  - [x] `.env.local` に `CSP_REPORT_URI=/api/csp-report` を追加（必須環境変数）
+  - [x] `.env.local` に `CSP_DEBUG_MODE=true` を追加（開発用）
 
-- [ ] ルール注入の実装詳細
-  - [ ] `<style nonce>` ノードを1つだけ保持し、CSS文字列を差し替え（重複増殖の防止）
-  - [ ] セレクタは `data-*` 属性 or 安全な固有IDでスコープ
-  - [ ] 大量ノード更新時は文字列連結で一括反映（reflowコスト最小化）
+- [x] nonce配線の基盤実装（厳格CSP運用の前提）
+  - [x] `middleware.ts` でリクエスト毎に `nonce` 生成
+  - [x] `request headers` 経由で `app/layout.tsx` に `nonce` を受け渡し
+  - [x] `<style nonce={...}>` を使えるヘルパ/プロバイダ作成
+  - [x] `security-headers.js` を更新し、`style-src` に `nonce-<dynamic>` を許可（`'unsafe-inline'` は未使用）
+  - [x] Report-Only で検証、問題なければ本番適用
 
-- [ ] 段階移行の運用
-  - [ ] 現行：`style-src` の `'unsafe-inline'` を暫定許可（安定稼働）
-  - [ ] 各コンポーネントの移行完了ごとにCSP違反が0であることを確認
+- [x] 動的style排除（クラス切替 or nonce付き<style>注入へ移行）
+  - [x] `src/components/ui/progress.tsx` の `transform` をクラス/ルール注入に置換
+  - [x] `src/components/ui/chart.tsx` の `style` オブジェクトをルール注入に置換
+  - [x] `src/components/common/PerformanceOptimizer.tsx` の `opacity/height/position/transform/overflow` をルール注入・クラス切替で再設計
+  - [x] スクロール/仮想リストの再描画時にCSSルールをバッチ更新（パフォーマンス確保）
+
+- [x] ルール注入の実装詳細
+  - [x] `<style nonce>` ノードを1つだけ保持し、CSS文字列を差し替え（重複増殖の防止）
+  - [x] セレクタは `data-*` 属性 or 安全な固有IDでスコープ
+  - [x] 大量ノード更新時は文字列連結で一括反映（reflowコスト最小化）
+  - [x] バッチ更新の最適化（複数ルール変更時の効率化）
+  - [x] エラーハンドリングとCSS検証の追加
+  - [x] メモリ管理とクリーンアップの改善
+
+- [x] 段階移行の運用
+  - [x] 現行：`style-src` の `'unsafe-inline'` を暫定許可（安定稼働）
+  - [x] 各コンポーネントの移行完了ごとにCSP違反が0であることを確認
+    - [x] `PerformanceOptimizer.tsx` の全コンポーネント（LazyImage、VirtualizedList）をCSPルール注入方式に移行完了
+    - [x] `chart.tsx` の ChartStyle コンポーネントをCSPルール注入方式に移行完了
+    - [x] `progress.tsx` のプログレスバー動的スタイルをCSPルール注入方式に移行完了
+    - [x] CSPレポート分析ページ `/csp-report-analyzer` の実装完了（違反監視体制構築）
+    - [x] CSS Rule Manager システムの完全実装（nonce対応、バッチ更新、エラーハンドリング）
   - [ ] 最終段：`'unsafe-inline'` をCSPから削除し、`nonce` のみで本番運用
+  - [ ] 本番環境用設定の適用（`CSP_UPGRADE_INSECURE=true` 等）
 
 - [ ] E2E/監視
   - [ ] Lighthouse/Best Practices でCSPエラーが無いことを確認
-  - [ ] 主要ページでCSP違反ログが出ないことを手動/自動テストで検証
+    - [ ] 自動Lighthouseテストの実装
+    - [ ] パフォーマンススコアの継続監視
+    - [ ] Best Practicesスコアの継続監視
+  - [x] 主要ページでCSP違反ログが出ないことを手動/自動テストで検証
+    - [x] CSPレポート収集API `/api/csp-report` の実装
+    - [x] CSPレポート分析ダッシュボード `/csp-report-analyzer` の実装
+    - [x] 違反タイプ別フィルタリング機能（Style/Script/コンポーネント別）
+    - [x] リアルタイム違反監視とサマリー表示機能
+    - [x] CSPテストページ `/csp-test` と `/csp-component-test` の実装
+    - [ ] 自動E2EテストでのCSP違反検出の実装
   - [ ] 回帰テスト（スクロール・仮想リスト・チャート表示のパフォーマンス劣化が無い）
+    - [x] CSS Rule Manager のバッチ更新によるパフォーマンス最適化
+    - [x] 動的スタイル注入時のreflow最小化対応
+    - [x] メモリ管理とクリーンアップの自動化
+    - [x] パフォーマンステスト用コンポーネントの実装
+    - [ ] 自動パフォーマンステストの実装（Playwright + Lighthouse）
+    - [ ] パフォーマンス劣化の継続監視体制

@@ -166,7 +166,9 @@ export default function PostsList() {
           if (!deleteResponse.ok) {
             console.warn('Failed to delete image:', await deleteResponse.text())
           } else {
-            console.log('Image deleted successfully')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Image deleted successfully');
+            }
           }
         } catch (error) {
           console.warn('Error deleting image:', error)

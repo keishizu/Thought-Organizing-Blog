@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-09-14T02:10:29.264Z",
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1",
+  "report": {
+    "csp-report": {
+      "document-uri": "http://localhost:3000/",
+      "referrer": "",
+      "violated-directive": "script-src",
+      "effective-directive": "script-src",
+      "original-policy": "default-src 'self'; script-src 'self' 'nonce-0q9svars89gvdhkepoww09' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com 'nonce-f5eiyxtqw8f8psddouuk3v'; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://qprlaprnzqewcgpcvzme.supabase.co wss://qprlaprnzqewcgpcvzme.supabase.co https://www.googletagmanager.com; frame-src 'self' https://www.googletagmanager.com; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; manifest-src 'self'; report-uri /api/csp-report",
+      "disposition": "report",
+      "blocked-uri": "eval",
+      "line-number": 1225,
+      "column-number": 26,
+      "source-file": "http://localhost:3000/_next/static/chunks/main-app.js",
+      "status-code": 200,
+      "script-sample": ""
+    }
+  }
+}

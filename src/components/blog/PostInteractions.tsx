@@ -130,7 +130,9 @@ export default function PostInteractions({
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // ここでコメント送信処理（Supabase等への保存）
-    console.log('Comment submitted:', comment);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Comment submitted:', comment);
+    }
     setComment('');
     alert('コメントを投稿しました。ありがとうございます！');
   };

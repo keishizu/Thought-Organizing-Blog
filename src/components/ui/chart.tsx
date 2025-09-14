@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/lib/utils';
+import { useComponentCSSRule } from '@/lib/css-rule-manager';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
@@ -76,12 +77,9 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+  const css = Object.entries(THEMES)
+    .map(
+      ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -92,12 +90,24 @@ ${colorConfig
   })
   .join('\n')}
 }
+
+/* 動的色の適用 - CSS変数を使用 */
+${prefix} [data-chart=${id}] [data-indicator-color] {
+  --color-bg: var(--indicator-color);
+  --color-border: var(--indicator-color);
+}
+
+${prefix} [data-chart=${id}] [data-legend-color] {
+  background-color: var(--legend-color);
+}
 `
-          )
-          .join('\n'),
-      }}
-    />
-  );
+    )
+    .join('\n');
+
+  // CSSルール管理システムを使用
+  useComponentCSSRule(`chart-${id}`, css);
+
+  return null; // CSSルール管理システムが処理するため、nullを返す
 };
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
@@ -217,12 +227,8 @@ const ChartTooltipContent = React.forwardRef<
                               'my-0.5': nestLabel && indicator === 'dashed',
                             }
                           )}
-                          style={
-                            {
-                              '--color-bg': indicatorColor,
-                              '--color-border': indicatorColor,
-                            } as React.CSSProperties
-                          }
+                          data-indicator-color={indicatorColor}
+                          style={{ '--indicator-color': indicatorColor } as React.CSSProperties}
                         />
                       )
                     )}
@@ -301,9 +307,8 @@ const ChartLegendContent = React.forwardRef<
               ) : (
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
+                  data-legend-color={item.color}
+                  style={{ '--legend-color': item.color } as React.CSSProperties}
                 />
               )}
               {itemConfig?.label}

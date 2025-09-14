@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Calendar, User, Tag } from 'lucide-react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import PostInteractions from '@/components/blog/PostInteractions';
+import SafeHtmlRenderer from '@/components/common/SafeHtmlRenderer';
 
 interface ArticlePreviewProps {
   article: {
@@ -76,9 +77,9 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
             </p>
             
             {/* HTMLコンテンツを安全に表示 */}
-            <div 
+            <SafeHtmlRenderer 
+              html={article.content}
               className="prose prose-lg max-w-none article-content"
-              dangerouslySetInnerHTML={{ __html: article.content }}
             />
           </div>
         </div>

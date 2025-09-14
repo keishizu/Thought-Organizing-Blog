@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 
+// デバッグログを出力する関数（開発環境でのみ）
+function debugLog(message: string, ...args: any[]) {
+  // 本番環境では一切ログを出力しない
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(message, ...args);
+  }
+}
+
+// エラーログを出力する関数（本番環境でも出力）
+function errorLog(message: string, ...args: any[]) {
+  console.error(message, ...args);
+}
+
 // 匿名ユーザーIDを生成する関数（UUID形式）
 function generateAnonymousUserId(): string {
   // UUID v4形式で生成
@@ -26,13 +39,13 @@ async function isAdmin(supabase: any): Promise<boolean> {
 export async function POST(request: Request) {
   try {
     const requestBody = await request.json();
-    console.log("POST /api/likes - Raw request body:", requestBody);
+    debugLog("POST /api/likes - Raw request body:", requestBody);
     const { postId, userId } = requestBody;
-    console.log("POST /api/likes - Parsed data:", { postId, userId });
+    debugLog("POST /api/likes - Parsed data:", { postId, userId });
     
     // リクエストデータの検証
     if (!postId) {
-      console.error("Missing postId in request");
+      errorLog("Missing postId in request");
       return NextResponse.json(
         { error: "Missing postId" },
         { status: 400 }
@@ -40,7 +53,7 @@ export async function POST(request: Request) {
     }
     
     if (!userId) {
-      console.error("Missing userId in request");
+      errorLog("Missing userId in request");
       return NextResponse.json(
         { error: "Missing userId" },
         { status: 400 }
@@ -54,7 +67,7 @@ export async function POST(request: Request) {
     const user = isAdminUser ? (await supabase.auth.getUser()).data.user : null;
     const currentUserId = isAdminUser && user ? user.id : (userId || generateAnonymousUserId());
     
-    console.log("User info:", { isAdminUser, currentUserId });
+    debugLog("User info:", { isAdminUser, currentUserId });
     
     // 既存のいいねをチェック
     const { data: existingLike, error: checkError } = await supabase
@@ -64,10 +77,10 @@ export async function POST(request: Request) {
       .eq('user_id', currentUserId)
       .single();
 
-    console.log("Checking existing like - Result:", { existingLike, checkError });
+    debugLog("Checking existing like - Result:", { existingLike, checkError });
 
     if (existingLike) {
-      console.log("User already liked this post");
+      debugLog("User already liked this post");
       return NextResponse.json(
         { error: "Already liked" },
         { status: 400 }
@@ -84,10 +97,10 @@ export async function POST(request: Request) {
       .select()
       .single();
 
-    console.log("Creating new like - Result:", { data, error });
+    debugLog("Creating new like - Result:", { data, error });
 
     if (error) {
-      console.error("Error adding like:", error);
+      errorLog("Error adding like:", error);
       return NextResponse.json(
         { error: "Internal Server Error", details: error.message },
         { status: 500 }
@@ -103,7 +116,7 @@ export async function POST(request: Request) {
       .single();
 
     if (fetchError) {
-      console.error("Error fetching updated likes count:", fetchError);
+      errorLog("Error fetching updated likes count:", fetchError);
       // いいねの追加は成功しているので、エラーでも成功レスポンスを返す
       return NextResponse.json({ 
         ...data, 
@@ -115,10 +128,10 @@ export async function POST(request: Request) {
       ...data, 
       updatedLikeCount: updatedPost.likes 
     };
-    console.log("POST /api/likes - Response:", response);
+    debugLog("POST /api/likes - Response:", response);
     return NextResponse.json(response, { status: 201 });
   } catch (error) {
-    console.error("Error adding like:", error);
+    errorLog("Error adding like:", error);
     return NextResponse.json(
       { error: "Internal Server Error", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
@@ -130,13 +143,13 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const requestBody = await request.json();
-    console.log("DELETE /api/likes - Raw request body:", requestBody);
+    debugLog("DELETE /api/likes - Raw request body:", requestBody);
     const { postId, userId } = requestBody;
-    console.log("DELETE /api/likes - Parsed data:", { postId, userId });
+    debugLog("DELETE /api/likes - Parsed data:", { postId, userId });
     
     // リクエストデータの検証
     if (!postId) {
-      console.error("Missing postId in request");
+      errorLog("Missing postId in request");
       return NextResponse.json(
         { error: "Missing postId" },
         { status: 400 }
@@ -144,7 +157,7 @@ export async function DELETE(request: Request) {
     }
     
     if (!userId) {
-      console.error("Missing userId in request");
+      errorLog("Missing userId in request");
       return NextResponse.json(
         { error: "Missing userId" },
         { status: 400 }
@@ -158,10 +171,10 @@ export async function DELETE(request: Request) {
     const user = isAdminUser ? (await supabase.auth.getUser()).data.user : null;
     const currentUserId = isAdminUser && user ? user.id : (userId || generateAnonymousUserId());
     
-    console.log("User info:", { isAdminUser, currentUserId });
+    debugLog("User info:", { isAdminUser, currentUserId });
     
     // 削除対象のレコードが存在するかチェック
-    console.log("Checking for existing like with:", { postId, currentUserId });
+    debugLog("Checking for existing like with:", { postId, currentUserId });
     const { data: existingLike, error: checkError } = await supabase
       .from('likes')
       .select('id')
@@ -169,10 +182,10 @@ export async function DELETE(request: Request) {
       .eq('user_id', currentUserId)
       .single();
 
-    console.log("Checking existing like for deletion - Result:", { existingLike, checkError });
+    debugLog("Checking existing like for deletion - Result:", { existingLike, checkError });
 
     if (checkError && checkError.code !== 'PGRST116') { // PGRST116は結果が見つからない場合
-      console.error("Error checking existing like:", checkError);
+      errorLog("Error checking existing like:", checkError);
       return NextResponse.json(
         { error: "Internal Server Error", details: checkError.message },
         { status: 500 }
@@ -180,7 +193,7 @@ export async function DELETE(request: Request) {
     }
 
     if (!existingLike) {
-      console.log("No like found to delete");
+      debugLog("No like found to delete");
       return NextResponse.json(
         { error: "Like not found" },
         { status: 404 }
@@ -188,7 +201,7 @@ export async function DELETE(request: Request) {
     }
 
     // いいねを削除（複数行が存在する可能性を考慮）
-    console.log("Attempting to delete like with:", { postId, currentUserId });
+    debugLog("Attempting to delete like with:", { postId, currentUserId });
     const { data: deletedLikes, error: deleteError } = await supabase
       .from('likes')
       .delete()
@@ -196,10 +209,10 @@ export async function DELETE(request: Request) {
       .eq('user_id', currentUserId)
       .select();
 
-    console.log("Deleting like - Result:", { deletedLikes, deleteError });
+    debugLog("Deleting like - Result:", { deletedLikes, deleteError });
 
     if (deleteError) {
-      console.error("Error removing like:", deleteError);
+      errorLog("Error removing like:", deleteError);
       return NextResponse.json(
         { error: "Internal Server Error", details: deleteError.message },
         { status: 500 }
@@ -208,7 +221,7 @@ export async function DELETE(request: Request) {
 
     // 削除されたレコードの数を確認
     const deletedCount = deletedLikes ? deletedLikes.length : 0;
-    console.log("Deleted likes count:", deletedCount);
+    debugLog("Deleted likes count:", deletedCount);
 
     // トリガー関数により自動的にpostsテーブルのlikesカウントが更新される
     // 最新のいいね数を取得
@@ -219,7 +232,7 @@ export async function DELETE(request: Request) {
       .single();
 
     if (fetchError) {
-      console.error("Error fetching updated likes count:", fetchError);
+      errorLog("Error fetching updated likes count:", fetchError);
       // いいねの削除は成功しているので、エラーでも成功レスポンスを返す
       return NextResponse.json({ 
         deleted: true, 
@@ -231,10 +244,10 @@ export async function DELETE(request: Request) {
       deleted: true, 
       updatedLikeCount: updatedPost.likes 
     };
-    console.log("DELETE /api/likes - Response:", response);
+    debugLog("DELETE /api/likes - Response:", response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Error removing like:", error);
+    errorLog("Error removing like:", error);
     return NextResponse.json(
       { error: "Internal Server Error", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
@@ -270,10 +283,10 @@ export async function GET(request: Request) {
       .eq('user_id', currentUserId)
       .single();
 
-    console.log("Checking like status - Result:", { data, error, isLiked: !!data });
+    debugLog("Checking like status - Result:", { data, error, isLiked: !!data });
 
     if (error && error.code !== 'PGRST116') { // PGRST116は結果が見つからない場合
-      console.error("Error checking like status:", error);
+      errorLog("Error checking like status:", error);
       return NextResponse.json(
         { error: "Database Error", details: error.message },
         { status: 500 }
@@ -282,7 +295,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ isLiked: !!data });
   } catch (error) {
-    console.error("Error checking like status:", error);
+    errorLog("Error checking like status:", error);
     return NextResponse.json(
       { error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

@@ -1,4 +1,4 @@
-const { generateSecurityHeaders } = require('./security-headers');
+// CSPヘッダーはmiddleware.tsで生成するため、security-headers.jsは不要
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -34,10 +34,8 @@ const nextConfig = {
   },
   // 圧縮を有効化
   compress: true,
-  // セキュリティヘッダー
+  // 基本的なセキュリティヘッダー（CSPはmiddleware.tsで処理）
   async headers() {
-    const securityHeaders = generateSecurityHeaders();
-    
     return [
       {
         source: '/(.*)',
@@ -59,11 +57,11 @@ const nextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
-          // 動的に生成されたセキュリティヘッダー（CSPを含む）
-          ...Object.entries(securityHeaders).map(([key, value]) => ({
-            key,
-            value,
-          })),
+          // 本番環境でのみHTSを適用
+          ...(process.env.NODE_ENV === 'production' ? [{
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          }] : []),
         ],
       },
       // 静的アセットのキャッシュ設定
