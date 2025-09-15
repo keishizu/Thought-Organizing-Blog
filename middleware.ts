@@ -32,7 +32,7 @@ function generateCSPPolicy(nonce?: string) {
     }
   }
   
-  scriptSrc.push('https://www.googletagmanager.com');
+  scriptSrc.push('https://www.googletagmanager.com', 'https://www.google-analytics.com');
   policies.push(`script-src ${scriptSrc.join(' ')}`);
 
   const styleSrc = ["'self'", 'https://fonts.googleapis.com'];
@@ -48,7 +48,7 @@ function generateCSPPolicy(nonce?: string) {
 
   policies.push("font-src 'self' https://fonts.gstatic.com data:");
   policies.push("img-src 'self' data: https: blob:");
-  policies.push("connect-src 'self' https://qprlaprnzqewcgpcvzme.supabase.co wss://qprlaprnzqewcgpcvzme.supabase.co https://www.googletagmanager.com");
+  policies.push("connect-src 'self' https://qprlaprnzqewcgpcvzme.supabase.co wss://qprlaprnzqewcgpcvzme.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com");
   policies.push("frame-src 'self' https://www.googletagmanager.com");
   policies.push("frame-ancestors 'self'");
   policies.push("object-src 'none'");

@@ -251,8 +251,8 @@
     - [x] `progress.tsx` のプログレスバー動的スタイルをCSPルール注入方式に移行完了
     - [x] CSPレポート分析ページ `/csp-report-analyzer` の実装完了（違反監視体制構築）
     - [x] CSS Rule Manager システムの完全実装（nonce対応、バッチ更新、エラーハンドリング）
-  - [ ] 最終段：`'unsafe-inline'` をCSPから削除し、`nonce` のみで本番運用
-  - [ ] 本番環境用設定の適用（`CSP_UPGRADE_INSECURE=true` 等）
+  - [x] 最終段：`'unsafe-inline'` をCSPから削除し、`nonce` のみで本番運用
+  - [x] 本番環境用設定の適用（`CSP_UPGRADE_INSECURE=true` 等）
 
 - [ ] E2E/監視
   - [ ] Lighthouse/Best Practices でCSPエラーが無いことを確認

@@ -6,6 +6,7 @@ import Layout from '@/components/layout/Layout';
 import { PerformanceMonitor } from '@/components/common/PerformanceMonitor';
 import { ErrorLoggerProvider } from '@/components/common/ErrorLogger';
 import { GTMAnalytics } from '@/components/common/analytics/GTMAnalytics';
+import { GoogleAnalytics } from '@/components/common/analytics/GoogleAnalytics';
 import { NonceProvider } from '@/components/common/NonceProvider';
 
 // 動的レンダリングを強制（nonceのため）
@@ -98,6 +99,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <PerformanceMonitor />
             <Suspense fallback={null}>
               <GTMAnalytics />
+            </Suspense>
+            <Suspense fallback={null}>
+              <GoogleAnalytics />
             </Suspense>
           </ErrorLoggerProvider>
         </NonceProvider>
