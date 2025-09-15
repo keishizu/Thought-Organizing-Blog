@@ -14,12 +14,12 @@ export function GoogleAnalytics() {
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
         strategy="afterInteractive"
-        nonce={nonce}
+        nonce={nonce || undefined}
       />
       <Script
         id="google-analytics-config"
         strategy="afterInteractive"
-        nonce={nonce}
+        nonce={nonce || undefined}
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
