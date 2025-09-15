@@ -254,22 +254,22 @@
   - [x] 最終段：`'unsafe-inline'` をCSPから削除し、`nonce` のみで本番運用
   - [x] 本番環境用設定の適用（`CSP_UPGRADE_INSECURE=true` 等）
 
-- [ ] E2E/監視
-  - [ ] Lighthouse/Best Practices でCSPエラーが無いことを確認
-    - [ ] 自動Lighthouseテストの実装
-    - [ ] パフォーマンススコアの継続監視
-    - [ ] Best Practicesスコアの継続監視
+ - [x] E2E/監視
+  - [x] Lighthouse/Best Practices でCSPエラーが無いことを確認
+    - [x] 自動Lighthouseテストの実装
+    - [x] パフォーマンススコアの継続監視
+    - [x] Best Practicesスコアの継続監視
   - [x] 主要ページでCSP違反ログが出ないことを手動/自動テストで検証
     - [x] CSPレポート収集API `/api/csp-report` の実装
     - [x] CSPレポート分析ダッシュボード `/csp-report-analyzer` の実装
     - [x] 違反タイプ別フィルタリング機能（Style/Script/コンポーネント別）
     - [x] リアルタイム違反監視とサマリー表示機能
     - [x] CSPテストページ `/csp-test` と `/csp-component-test` の実装
-    - [ ] 自動E2EテストでのCSP違反検出の実装
-  - [ ] 回帰テスト（スクロール・仮想リスト・チャート表示のパフォーマンス劣化が無い）
+    - [x] 自動E2EテストでのCSP違反検出の実装
+  - [x] 回帰テスト（スクロール・仮想リスト・チャート表示のパフォーマンス劣化が無い）
     - [x] CSS Rule Manager のバッチ更新によるパフォーマンス最適化
     - [x] 動的スタイル注入時のreflow最小化対応
     - [x] メモリ管理とクリーンアップの自動化
     - [x] パフォーマンステスト用コンポーネントの実装
-    - [ ] 自動パフォーマンステストの実装（Playwright + Lighthouse）
-    - [ ] パフォーマンス劣化の継続監視体制
+    - [x] 自動パフォーマンステストの実装（Playwright + Lighthouse）
+    - [x] パフォーマンス劣化の継続監視体制

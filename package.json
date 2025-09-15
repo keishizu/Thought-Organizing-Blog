@@ -13,7 +13,16 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:headed": "playwright test --headed",
+    "lighthouse": "node scripts/lighthouse-audit.js",
+    "lighthouse:dev": "LIGHTHOUSE_BASE_URL=http://localhost:3000 node scripts/lighthouse-audit.js",
+    "lighthouse:prod": "LIGHTHOUSE_BASE_URL=https://thought-organizing-blog.vercel.app node scripts/lighthouse-audit.js",
+    "performance:test": "npm run lighthouse:dev && npm run test:e2e -- --grep=\"lighthouse|performance|csp-violation\"",
+    "performance:monitor": "npm run lighthouse && npm run test:e2e -- tests/e2e/performance-security.spec.ts",
+    "monitoring:integrated": "npm run test:e2e -- tests/e2e/integrated-monitoring.spec.ts",
+    "monitoring:full": "npm run lighthouse:dev && npm run test:e2e -- tests/e2e/lighthouse-tests.spec.ts tests/e2e/csp-violation-detection.spec.ts tests/e2e/integrated-monitoring.spec.ts",
+    "monitoring:health": "bash scripts/check-performance-health.sh",
+    "monitoring:setup": "bash scripts/setup-monitoring.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -107,7 +116,10 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
+    "chrome-launcher": "^1.2.0",
     "jest": "^30.1.1",
-    "jest-environment-jsdom": "^30.1.1"
+    "jest-environment-jsdom": "^30.1.1",
+    "lighthouse": "^12.8.2",
+    "playwright-lighthouse": "^4.0.0"
   }
 }

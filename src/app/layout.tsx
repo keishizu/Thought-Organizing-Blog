@@ -8,6 +8,7 @@ import { ErrorLoggerProvider } from '@/components/common/ErrorLogger';
 import { GTMAnalytics } from '@/components/common/analytics/GTMAnalytics';
 import { GoogleAnalytics } from '@/components/common/analytics/GoogleAnalytics';
 import { NonceProvider } from '@/components/common/NonceProvider';
+import { PerformanceMonitorProvider } from '@/components/monitoring/PerformanceMonitorProvider';
 
 // 動的レンダリングを強制（nonceのため）
 export const dynamic = 'force-dynamic';
@@ -92,18 +93,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager (noscript) */}
         
         <NonceProvider nonce={nonce}>
-          <ErrorLoggerProvider>
-            <Layout>
-              {children}
-            </Layout>
-            <PerformanceMonitor />
-            <Suspense fallback={null}>
-              <GTMAnalytics />
-            </Suspense>
-            <Suspense fallback={null}>
-              <GoogleAnalytics />
-            </Suspense>
-          </ErrorLoggerProvider>
+          <PerformanceMonitorProvider>
+            <ErrorLoggerProvider>
+              <Layout>
+                {children}
+              </Layout>
+              <PerformanceMonitor />
+              <Suspense fallback={null}>
+                <GTMAnalytics />
+              </Suspense>
+              <Suspense fallback={null}>
+                <GoogleAnalytics />
+              </Suspense>
+            </ErrorLoggerProvider>
+          </PerformanceMonitorProvider>
         </NonceProvider>
       </body>
     </html>

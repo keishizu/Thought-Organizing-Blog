@@ -1,0 +1,338 @@
+name: Performance Monitoring
+
+on:
+  push:
+    branches: [ main ] # developブランチを除外
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 本番環境のみ毎日午前2時（UTC）に実行
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target URL for testing'
+        required: false
+        default: 'https://thought-organizing-blog.vercel.app'
+      environment:
+        description: 'Environment (development/production)'
+        required: false
+        default: 'production'
+
+jobs:
+  lighthouse-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Start application
+      run: |
+        npm start &
+        npx wait-on http://localhost:3000 --timeout 60000
+      env:
+        NODE_ENV: production
+
+    - name: Run Lighthouse audit
+      run: npm run lighthouse:dev
+      env:
+        LIGHTHOUSE_BASE_URL: http://localhost:3000
+
+    - name: Upload Lighthouse reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: lighthouse-reports-${{ github.sha }}
+        path: lighthouse-reports/
+        retention-days: 30
+
+    - name: Comment PR with Lighthouse results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            const summaryPath = path.join('lighthouse-reports', 'overall-summary.json');
+            if (fs.existsSync(summaryPath)) {
+              const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+              
+              const comment = `
+              ## 🚀 Lighthouse Performance Report
+              
+              **Overall Results:**
+              - 📊 Total Pages Tested: ${summary.totalPages}
+              - ✅ Passed: ${summary.passedPages}
+              - ❌ Failed: ${summary.failedPages}
+              
+              **Average Scores:**
+              - 🏃 Performance: ${summary.averageScores.performance}/100
+              - ♿ Accessibility: ${summary.averageScores.accessibility}/100
+              - 🏆 Best Practices: ${summary.averageScores.bestPractices}/100
+              - 🔍 SEO: ${summary.averageScores.seo}/100
+              
+              ${summary.criticalFailures.length > 0 ? 
+                `**🚨 Critical Failures:**\n${summary.criticalFailures.map(f => `- ${f.pageName}: ${f.failedCategories.join(', ')}`).join('\n')}` : 
+                '**🎉 All critical pages passed!**'
+              }
+              
+              <details>
+              <summary>📋 Detailed Results</summary>
+              
+              ${summary.results.map(r => `
+              **${r.pageName}** (${r.url})
+              - Performance: ${r.scores.performance}/100 ${r.passed.performance ? '✅' : '❌'}
+              - Accessibility: ${r.scores.accessibility}/100 ${r.passed.accessibility ? '✅' : '❌'}
+              - Best Practices: ${r.scores.bestPractices}/100 ${r.passed.bestPractices ? '✅' : '❌'}
+              - SEO: ${r.scores.seo}/100 ${r.passed.seo ? '✅' : '❌'}
+              `).join('\n')}
+              
+              </details>
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.error('Failed to post Lighthouse results:', error);
+          }
+
+  e2e-performance-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Build application
+      run: npm run build
+
+    - name: Start application
+      run: |
+        npm start &
+        npx wait-on http://localhost:3000 --timeout 60000
+      env:
+        NODE_ENV: production
+
+    - name: Run E2E performance tests
+      run: npx playwright test tests/e2e/lighthouse-tests.spec.ts tests/e2e/csp-violation-detection.spec.ts
+      env:
+        CI: true
+
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: e2e-performance-results-${{ github.sha }}
+        path: |
+          test-results/
+          playwright-report/
+        retention-days: 30
+
+  performance-regression-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Start application
+      run: |
+        npm start &
+        npx wait-on http://localhost:3000 --timeout 60000
+
+    - name: Run performance regression tests
+      run: npm run performance:test
+      continue-on-error: true
+      id: performance-test
+
+    - name: Check for performance regressions
+      run: |
+        if [ "${{ steps.performance-test.outcome }}" = "failure" ]; then
+          echo "❌ Performance regression detected!"
+          echo "performance_regression=true" >> $GITHUB_OUTPUT
+          exit 1
+        else
+          echo "✅ No performance regression detected"
+          echo "performance_regression=false" >> $GITHUB_OUTPUT
+        fi
+      id: regression-check
+
+    - name: Comment on PR if regression detected
+      if: steps.regression-check.outputs.performance_regression == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `
+            ## 🚨 Performance Regression Detected
+            
+            The performance tests have detected potential regressions in this PR.
+            
+            **Action Required:**
+            1. Review the performance test results in the Actions tab
+            2. Check the Lighthouse reports for specific issues
+            3. Optimize the code to meet performance thresholds
+            4. Re-run the tests after fixes
+            
+            **Thresholds:**
+            - Performance Score: ≥ 90
+            - Accessibility Score: ≥ 95  
+            - Best Practices Score: ≥ 90
+            - SEO Score: ≥ 90
+            
+            Please address these issues before merging.
+            `
+          });
+
+  daily-performance-report:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run production performance audit
+      run: npm run lighthouse:prod
+      env:
+        LIGHTHOUSE_BASE_URL: ${{ github.event.inputs.target_url || 'https://thought-organizing-blog.vercel.app' }}
+
+    - name: Generate performance report
+      run: |
+        echo "# Daily Performance Report - $(date)" > performance-report.md
+        echo "" >> performance-report.md
+        
+        if [ -f "lighthouse-reports/overall-summary.json" ]; then
+          node -e "
+            const fs = require('fs');
+            const summary = JSON.parse(fs.readFileSync('lighthouse-reports/overall-summary.json', 'utf8'));
+            
+            console.log(\`## 📊 Performance Summary\`);
+            console.log(\`\`);
+            console.log(\`- **Total Pages:** \${summary.totalPages}\`);
+            console.log(\`- **Passed Pages:** \${summary.passedPages}\`);
+            console.log(\`- **Failed Pages:** \${summary.failedPages}\`);
+            console.log(\`\`);
+            console.log(\`## 🏆 Average Scores\`);
+            console.log(\`\`);
+            console.log(\`- **Performance:** \${summary.averageScores.performance}/100\`);
+            console.log(\`- **Accessibility:** \${summary.averageScores.accessibility}/100\`);
+            console.log(\`- **Best Practices:** \${summary.averageScores.bestPractices}/100\`);
+            console.log(\`- **SEO:** \${summary.averageScores.seo}/100\`);
+            
+            if (summary.criticalFailures.length > 0) {
+              console.log(\`\`);
+              console.log(\`## 🚨 Critical Issues\`);
+              console.log(\`\`);
+              summary.criticalFailures.forEach(failure => {
+                console.log(\`- **\${failure.pageName}:** \${failure.failedCategories.join(', ')}\`);
+              });
+            }
+          " >> performance-report.md
+        fi
+
+    - name: Upload daily report
+      uses: actions/upload-artifact@v3
+      with:
+        name: daily-performance-report-${{ github.run_number }}
+        path: |
+          performance-report.md
+          lighthouse-reports/
+        retention-days: 90
+
+    - name: Create issue for critical failures
+      if: always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          if (fs.existsSync('lighthouse-reports/overall-summary.json')) {
+            const summary = JSON.parse(fs.readFileSync('lighthouse-reports/overall-summary.json', 'utf8'));
+            
+            if (summary.criticalFailures.length > 0) {
+              const issueBody = `
+              # 🚨 Daily Performance Monitor Alert
+              
+              Critical performance issues detected on ${new Date().toISOString().split('T')[0]}
+              
+              ## Critical Failures:
+              ${summary.criticalFailures.map(f => `- **${f.pageName}**: ${f.failedCategories.join(', ')}`).join('\n')}
+              
+              ## Performance Summary:
+              - Performance: ${summary.averageScores.performance}/100
+              - Accessibility: ${summary.averageScores.accessibility}/100
+              - Best Practices: ${summary.averageScores.bestPractices}/100
+              - SEO: ${summary.averageScores.seo}/100
+              
+              Please investigate and resolve these issues to maintain site quality.
+              
+              **Auto-generated by Performance Monitoring Workflow**
+              `;
+              
+              github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 Performance Alert - ${new Date().toISOString().split('T')[0]}`,
+                body: issueBody,
+                labels: ['performance', 'urgent', 'automated']
+              });
+            }
+          }
