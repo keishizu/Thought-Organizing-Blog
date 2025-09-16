@@ -5,7 +5,6 @@
  * CI/CDパイプラインやcronジョブで使用
  */
 
-const lighthouse = require('lighthouse')
 const chromeLauncher = require('chrome-launcher')
 const fs = require('fs')
 const path = require('path')
@@ -64,7 +63,8 @@ async function runLighthouseAudit(url, pageName) {
       port: chrome.port,
     }
 
-    // Lighthouse実行
+    // Lighthouse実行（ESM: 動的インポートで対応）
+    const { default: lighthouse } = await import('lighthouse')
     const runnerResult = await lighthouse(url, options)
 
     if (!runnerResult) {
