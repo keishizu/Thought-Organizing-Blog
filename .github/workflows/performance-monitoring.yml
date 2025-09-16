@@ -52,7 +52,7 @@ jobs:
         LIGHTHOUSE_BASE_URL: http://localhost:3000
 
     - name: Upload Lighthouse reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: lighthouse-reports-${{ github.sha }}
@@ -151,7 +151,7 @@ jobs:
         CI: true
 
     - name: Upload E2E test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: e2e-performance-results-${{ github.sha }}
@@ -289,7 +289,7 @@ jobs:
         fi
 
     - name: Upload daily report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: daily-performance-report-${{ github.run_number }}
         path: |
