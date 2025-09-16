@@ -5,7 +5,6 @@
  * CI/CDパイプラインやcronジョブで使用
  */
 
-const chromeLauncher = require('chrome-launcher')
 const fs = require('fs')
 const path = require('path')
 
@@ -50,7 +49,8 @@ async function runLighthouseAudit(url, pageName) {
   
   let chrome
   try {
-    // Chrome起動
+    // Chrome起動（ESM: 動的インポートで対応）
+    const { default: chromeLauncher } = await import('chrome-launcher')
     chrome = await chromeLauncher.launch({
       chromeFlags: CONFIG.chromeFlags
     })

@@ -146,7 +146,7 @@ jobs:
         NODE_ENV: production
 
     - name: Run E2E performance tests
-      run: npx playwright test tests/e2e/lighthouse-tests.spec.ts tests/e2e/csp-violation-detection.spec.ts
+      run: npx playwright test -- tests/e2e/lighthouse-tests.spec.ts tests/e2e/csp-violation-detection.spec.ts
       env:
         CI: true
 
